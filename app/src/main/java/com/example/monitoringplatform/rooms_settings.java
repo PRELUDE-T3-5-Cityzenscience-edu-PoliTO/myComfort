@@ -101,6 +101,7 @@ public class rooms_settings extends AppCompatActivity {
         Type typeID = new TypeToken<List<String>>() {
         }.getType();
         rooms = gsonID.fromJson(jsonID, typeID);
+        //provasds
         buildRoomsList();
     }
     public void retrieveRoomsList(){
