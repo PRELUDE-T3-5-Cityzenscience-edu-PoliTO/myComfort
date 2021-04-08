@@ -12,8 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MonitoringPlatform"
         android:usesCleartextTraffic="true">
-        <activity android:name=".my_platforms"></activity>
+        <activity android:name=".network" />
+        <activity android:name=".my_platforms" />
         <activity android:name=".rooms_settings" />
+        <activity android:name=".rooms_devices" />
         <activity android:name=".profile_settings" />
         <activity android:name=".overview" />
         <activity android:name=".homepage" />

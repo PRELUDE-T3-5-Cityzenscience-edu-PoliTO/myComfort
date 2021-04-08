@@ -58,7 +58,7 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         // register all the card views with their appropriate IDs
         CardView myOverview = (CardView) findViewById(R.id.myOverview);
         CardView myGraphs = (CardView) findViewById(R.id.myGraphs);
-        CardView learnCard = (CardView) findViewById(R.id.learnCard);
+        CardView myNetwork = (CardView) findViewById(R.id.myNetwork);
         CardView interestsCard = (CardView) findViewById(R.id.interestsCard);
         CardView helpCard = (CardView) findViewById(R.id.helpCard);
         CardView settingsCard = (CardView) findViewById(R.id.settingsCard);
@@ -86,6 +86,14 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             public void onClick(View v) {
                 //Toast.makeText(homepage.this,"My overview",Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent(homepage.this, MainActivity2.class);
+                startActivity(intent);
+            }
+        });
+        myNetwork.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(homepage.this,"My overview",Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(homepage.this, rooms_devices.class);
                 startActivity(intent);
             }
         });
