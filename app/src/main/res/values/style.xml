@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MyAlertDialog" parent="Base.Theme.AppCompat.Dialog">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
+        <item name="android:headerDividersEnabled">true</item>
+        <item name="android:typeface">normal</item>
+        <item name="android:background">@color/colorBGshape</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
+    </style>
+
+</resources>

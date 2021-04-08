@@ -1,0 +1,66 @@
+<resources>
+    <!-- Reply Preference -->
+    <string-array name="inactive_entries">
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>6 hours</item>
+        <item>12 hours</item>
+        <item>24 hours</item>
+    </string-array>
+    <string-array name="inactive_values">
+        <item>1800</item>
+        <item>3600</item>
+        <item>21600</item>
+        <item>43200</item>
+        <item>86400</item>
+    </string-array>
+    <!-- User room Preference -->
+    <string-array name="clothing">
+        <item>0 clo</item>
+        <item>0.1 clo</item>
+        <item>0.3 clo</item>
+        <item>0.5 clo</item>
+        <item>0.8 clo</item>
+        <item>1.0 clo</item>
+        <item>1.5 clo</item>
+        <item>1.9 clo</item>
+    </string-array>
+
+    <string-array name="clothing_values">
+        <item>0.1</item>
+        <item>0.1</item>
+        <item>0.3</item>
+        <item>0.5</item>
+        <item>0.8</item>
+        <item>1.0</item>
+        <item>1.5</item>
+        <item>1.9</item>
+    </string-array>
+    <!-- User room Preference -->
+
+    <string-array name="met">
+        <item>0 met</item>
+        <item>0.1 met</item>
+        <item>0.3 met</item>
+        <item>0.5 met</item>
+        <item>0.8 met</item>
+        <item>1.0 met</item>
+        <item>1.2 met</item>
+        <item>1.5 met</item>
+        <item>1.9 met</item>
+    </string-array>
+
+    <string-array name="met_values">
+        <item>0.1</item>
+        <item>0.1</item>
+        <item>0.3</item>
+        <item>0.5</item>
+        <item>0.8</item>
+        <item>1.0</item>
+        <item>1.2</item>
+        <item>1.5</item>
+        <item>1.9</item>
+    </string-array>
+
+
+</resources>

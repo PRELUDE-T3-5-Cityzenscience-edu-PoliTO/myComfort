@@ -1,0 +1,30 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <PreferenceCategory app:title="@string/room_header">
+
+        <EditTextPreference
+            app:key="room_name"
+            app:defaultValue="Name"
+            app:title="Room Name"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+    <PreferenceCategory app:title="@string/params_header">
+    <ListPreference
+        app:entries="@array/clothing"
+        app:entryValues="@array/clothing_values"
+        app:key="Icl_clo"
+        app:title="@string/clothing"
+        app:useSimpleSummaryProvider="true" />
+    <ListPreference
+        android:entries="@array/met"
+        android:entryValues="@array/met_values"
+        android:key="M_met"
+        android:title="@string/met"
+        app:useSimpleSummaryProvider="true"
+        />
+    </PreferenceCategory>
+
+</PreferenceScreen>
