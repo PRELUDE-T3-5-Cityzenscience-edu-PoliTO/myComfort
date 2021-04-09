@@ -6,10 +6,13 @@ import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -28,6 +32,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -255,10 +260,82 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             case R.id.item2:
                 Toast.makeText(this, "It should be implemented", Toast.LENGTH_SHORT).show();
                 return true;
+            case R.id.feedback:
+                selectRoom();
+                return true;
+
 
             default:
                 return false;
         }
+    }
+    public void selectRoom(){
+        SharedPreferences userdetails = homepage.this.getSharedPreferences("userdetails", MODE_PRIVATE);
+        Gson gsonID = new Gson();
+        String jsonID = userdetails.getString("rooms_ID", "");
+        Type typeID = new TypeToken<List<String>>() {
+        }.getType();
+        List<String> rooms_ID = gsonID.fromJson(jsonID, typeID);
+        Gson gsonName = new Gson();
+        String jsonName = userdetails.getString("rooms_name", "");
+        Type typeName = new TypeToken<List<String>>() {
+        }.getType();
+        List<String> roomsName = gsonName.fromJson(jsonName, typeName);
+        String[] array_name = roomsName.toArray(new String[0]);
+        String[] array_ID = rooms_ID.toArray(new String[0]);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.MyFeedbackDialog);
+        builder.setTitle("Select your room for feedback");
+        builder.setItems(array_name, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String myroom=array_name[which];
+                feedbackDialog(myroom);
+            }
+        });
+        builder.show();
+    }
+    public void feedbackDialog(String myroom){
+        /*
+        Dialog d=new Dialog(this);
+        d.setTitle("My Feedback");
+        d.setCancelable(false);
+        d.setContentView(R.layout.dialog);
+        d.show();
+         */
+        String[] comfort = {"Too cold","Cold", "Ok", "Hot","Too hot"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.MyFeedbackDialog);
+        builder.setTitle("My Feedback");
+        builder.setItems(comfort, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+               String myfeedback=comfort[which];
+                try {
+                    sendFeedback(myroom,myfeedback);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        builder.show();
+    }
+    public void sendFeedback(String myroom,String myfeedback) throws JSONException {
+        SharedPreferences userdetails = getSharedPreferences("userdetails", MODE_PRIVATE);
+        String feedbackURL=userdetails.getString("feedbackURL","");
+        Util.putParameter(homepage.this,feedbackURL,"/"+myroom,"/newFeedback/","feedback", myfeedback.toLowerCase(),false,false,new Util.PostCallback() {
+            @Override
+            public void onRespSuccess(JSONObject result) {
+                Toast.makeText(homepage.this,"Ok",Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onRespError(String result) {
+                Toast.makeText(homepage.this,"Can't save settings",Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+
     }
     public void logoutDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(homepage.this,R.style.MyAlertDialog);

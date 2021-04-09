@@ -178,6 +178,44 @@ public class Util {
         }
 
     }
+    public static void putParameter(Context context, String api, String extraParameter,String operation, String parameter, String parameter_value, boolean isInt,boolean isFloat,final Util.PostCallback responseCallback) throws JSONException {
+        SharedPreferences currentdetails = context.getSharedPreferences("currentdetails", Context.MODE_PRIVATE);
+        String platform_ID = currentdetails.getString("platform_ID", "");
+        String final_uri=operation+platform_ID+extraParameter;
+        String final_url = Util.setURL(api, final_uri);
+        JSONObject jsonBody = new JSONObject();
+        jsonBody.put(parameter, parameter_value);
+        if (isFloat && parameter_value!=null){
+            jsonBody.put("parameter_value", Double.parseDouble(parameter_value));
+        }else {
+            if(isInt){
+                jsonBody.put("parameter_value", Integer.parseInt(parameter_value));
+            }else {
+                jsonBody.put("parameter_value", parameter_value);
+            }
+        }
+        JsonObjectRequest JSONreq = new JsonObjectRequest(Request.Method.PUT, final_url, jsonBody,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        responseCallback.onRespSuccess(response);
+
+                    }
+                },  new Response.ErrorListener()  {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error.networkResponse != null && error.networkResponse.statusCode == HttpURLConnection.HTTP_UNAUTHORIZED){
+                    responseCallback.onRespError(error.getMessage());
+
+                }
+            }
+        });
+        if (JSONreq!=null) {
+            AppSingleton.getInstance(context).addToRequestQueue(JSONreq);
+        }
+
+    }
     public interface LoginCallback {
 
         void onLoginSuccess(JSONObject result);

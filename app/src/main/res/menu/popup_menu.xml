@@ -11,5 +11,9 @@
         android:id="@+id/item2"
         android:title="Info" />
 
+    <item
+        android:id="@+id/feedback"
+        android:title="Feedback" />
+
 
 </menu>

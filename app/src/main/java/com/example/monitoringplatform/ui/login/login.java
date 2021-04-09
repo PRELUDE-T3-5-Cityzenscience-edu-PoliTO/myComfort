@@ -50,6 +50,8 @@ public class login extends AppCompatActivity {
     private String inputName;
     private String inputPass;
     private String serverURI;
+    private String feedbackURI;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,7 @@ public class login extends AppCompatActivity {
             clientsURI = Util.getProperty("clientsURI",login.this);
             profilesURI = Util.getProperty("profilesURI",login.this);
             serverURI = Util.getProperty("serverURI",login.this);
+            feedbackURI = Util.getProperty("feedbackURI",login.this);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -91,6 +94,7 @@ public class login extends AppCompatActivity {
                                 @Override
                                 public void onLoginSuccess(JSONObject result) {
                                     getServer();
+                                    getFeedback();
                                     parseJSON(result);
                                     Toast.makeText(login.this,"Welcome back "+user_ID,Toast.LENGTH_SHORT).show();
                                     Intent intent=new Intent(login.this, homepage.class);
@@ -122,6 +126,22 @@ public class login extends AppCompatActivity {
 
     public void getServer(){
         Util.getService(login.this,apiURL, serverURI, "serverURL", new Util.ServiceCallback() {
+            @Override
+            public void onReqSuccess(JSONObject result) {
+
+            }
+
+            @Override
+            public void onReqError(String result) {
+                Toast.makeText(login.this,result,Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+    }
+    public void getFeedback(){
+        Util.getService(login.this,apiURL, feedbackURI, "feedbackURL", new Util.ServiceCallback() {
             @Override
             public void onReqSuccess(JSONObject result) {
 
