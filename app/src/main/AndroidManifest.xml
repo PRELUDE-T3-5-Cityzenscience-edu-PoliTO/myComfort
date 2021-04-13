@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MonitoringPlatform"
         android:usesCleartextTraffic="true">
+        <activity android:name=".notification" />
         <activity android:name=".network" />
         <activity android:name=".my_platforms" />
         <activity android:name=".rooms_settings" />
@@ -28,6 +29,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".reminder" />
     </application>
 
 </manifest>

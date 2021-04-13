@@ -6,7 +6,9 @@ import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,26 +30,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.monitoringplatform.ui.login.login;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     public int Firstflag=0;
-
+    Boolean isAllFabsVisible;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
-
+        
         // register all the ImageButtons with their appropriate IDs
         ImageButton backB = (ImageButton) findViewById(R.id.backB);
         ImageButton logOutB = (ImageButton) findViewById(R.id.logOutB);
@@ -66,7 +72,22 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         CardView myNetwork = (CardView) findViewById(R.id.myNetwork);
         CardView interestsCard = (CardView) findViewById(R.id.interestsCard);
         CardView helpCard = (CardView) findViewById(R.id.helpCard);
-        CardView settingsCard = (CardView) findViewById(R.id.settingsCard);
+        CardView mySettings = (CardView) findViewById(R.id.settingsCard);
+
+        FloatingActionButton mAddFab = findViewById(R.id.add_fab);
+        FloatingActionButton mAddPlatformFab = findViewById(R.id.add_platform_fab);
+        FloatingActionButton mAddRoomFab = findViewById(R.id.add_room_fab);
+
+        // Also register the action name text, of all the FABs.
+        TextView addPlatformActionText = findViewById(R.id.add_platform_text);
+        TextView addRoomActionText = findViewById(R.id.add_room_text);
+
+        mAddPlatformFab.setVisibility(View.GONE);
+        mAddRoomFab.setVisibility(View.GONE);
+        addPlatformActionText.setVisibility(View.GONE);
+        addRoomActionText.setVisibility(View.GONE);
+        isAllFabsVisible = false;
+
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -102,6 +123,51 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                 startActivity(intent);
             }
         });
+        mySettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(homepage.this,"My overview",Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(homepage.this, notification.class);
+                startActivity(intent);
+            }
+        });
+
+        mAddFab.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (!isAllFabsVisible) {
+                            mAddPlatformFab.show();
+                            mAddRoomFab.show();
+                            addPlatformActionText.setVisibility(View.VISIBLE);
+                            addRoomActionText.setVisibility(View.VISIBLE);
+
+                            isAllFabsVisible = true;
+                        } else {
+
+                            mAddPlatformFab.hide();
+                            mAddRoomFab.hide();
+                            addPlatformActionText.setVisibility(View.GONE);
+                            addRoomActionText.setVisibility(View.GONE);
+
+                            isAllFabsVisible = false;
+                        }
+                    }
+                });
+        mAddPlatformFab.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(homepage.this, "Platform Added", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        mAddRoomFab.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(homepage.this, "Room Added", Toast.LENGTH_SHORT).show();
+                    }
+                });
         editProfileB.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -261,7 +327,7 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                 Toast.makeText(this, "It should be implemented", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.feedback:
-                selectRoom();
+                retrieveRoomsList();
                 return true;
 
 
@@ -302,13 +368,15 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         d.setContentView(R.layout.dialog);
         d.show();
          */
+
         String[] comfort = {"Too cold","Cold", "Ok", "Hot","Too hot"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.MyFeedbackDialog);
         builder.setTitle("My Feedback");
         builder.setItems(comfort, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-               String myfeedback=comfort[which];
+                Toast.makeText(homepage.this,"Feedback sent.",Toast.LENGTH_SHORT).show();
+                String myfeedback=comfort[which];
                 try {
                     sendFeedback(myroom,myfeedback);
                 } catch (JSONException e) {
@@ -356,6 +424,42 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         AlertDialog alert11 = builder.create();
         alert11.show();
 
+
+    }
+    public void retrieveRoomsList(){
+        SharedPreferences currentdetails = homepage.this.getSharedPreferences("currentdetails", Context.MODE_PRIVATE);
+        String platform_ID = currentdetails.getString("platform_ID", "");
+        SharedPreferences userdetails = homepage.this.getSharedPreferences("userdetails", MODE_PRIVATE);
+        String profilesURL=userdetails.getString("profilesURL","");
+        Util.getPlatformInfo(profilesURL, platform_ID, "preferences", homepage.this, new Util.ResponseCallback() {
+            @Override
+            public void onRespSuccess(String result) throws JSONException {
+                List<String> roomsList = new ArrayList<>();
+                List<String> rooms_nameList = new ArrayList<>();
+                JSONArray array = new JSONArray(result);
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject object = array.getJSONObject(i);
+                    roomsList.add(object.getString("room_ID"));
+                    rooms_nameList.add(object.getString("room_name"));
+                }
+                SharedPreferences.Editor editor = userdetails.edit();
+                Gson gson_out= new Gson();
+                String json_out= gson_out.toJson(roomsList);
+                editor.putString("rooms_ID", json_out);
+                editor.commit();
+                Gson gson_out2= new Gson();
+                String json_out2= gson_out2.toJson(rooms_nameList);
+                editor.putString("rooms_name", json_out2);
+                editor.commit();
+                selectRoom();
+            }
+
+            @Override
+            public void onRespError(String result) {
+                Toast.makeText(homepage.this,result,Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
     }
     public void performLogout(){
