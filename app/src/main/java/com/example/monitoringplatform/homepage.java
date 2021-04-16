@@ -8,6 +8,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -41,7 +42,9 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
@@ -53,7 +56,6 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
-        
         // register all the ImageButtons with their appropriate IDs
         ImageButton backB = (ImageButton) findViewById(R.id.backB);
         ImageButton logOutB = (ImageButton) findViewById(R.id.logOutB);
@@ -73,20 +75,6 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         CardView interestsCard = (CardView) findViewById(R.id.interestsCard);
         CardView helpCard = (CardView) findViewById(R.id.helpCard);
         CardView mySettings = (CardView) findViewById(R.id.settingsCard);
-
-        FloatingActionButton mAddFab = findViewById(R.id.add_fab);
-        FloatingActionButton mAddPlatformFab = findViewById(R.id.add_platform_fab);
-        FloatingActionButton mAddRoomFab = findViewById(R.id.add_room_fab);
-
-        // Also register the action name text, of all the FABs.
-        TextView addPlatformActionText = findViewById(R.id.add_platform_text);
-        TextView addRoomActionText = findViewById(R.id.add_room_text);
-
-        mAddPlatformFab.setVisibility(View.GONE);
-        mAddRoomFab.setVisibility(View.GONE);
-        addPlatformActionText.setVisibility(View.GONE);
-        addRoomActionText.setVisibility(View.GONE);
-        isAllFabsVisible = false;
 
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
@@ -132,42 +120,7 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             }
         });
 
-        mAddFab.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (!isAllFabsVisible) {
-                            mAddPlatformFab.show();
-                            mAddRoomFab.show();
-                            addPlatformActionText.setVisibility(View.VISIBLE);
-                            addRoomActionText.setVisibility(View.VISIBLE);
 
-                            isAllFabsVisible = true;
-                        } else {
-
-                            mAddPlatformFab.hide();
-                            mAddRoomFab.hide();
-                            addPlatformActionText.setVisibility(View.GONE);
-                            addRoomActionText.setVisibility(View.GONE);
-
-                            isAllFabsVisible = false;
-                        }
-                    }
-                });
-        mAddPlatformFab.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(homepage.this, "Platform Added", Toast.LENGTH_SHORT).show();
-                    }
-                });
-        mAddRoomFab.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(homepage.this, "Room Added", Toast.LENGTH_SHORT).show();
-                    }
-                });
         editProfileB.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,10 +162,65 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     public void onPause(){
         super.onPause();
     }
+    @Override
     public void onResume() {
         super.onResume();
+        createFloating();
         updateName();
         updatePlatformName();
+
+    }
+
+    public void createFloating(){
+        FloatingActionButton mAddFab = findViewById(R.id.add_fab);
+        FloatingActionButton mAddPlatformFab = findViewById(R.id.add_platform_fab);
+        FloatingActionButton mAddRoomFab = findViewById(R.id.add_room_fab);
+
+        // Also register the action name text, of all the FABs.
+        TextView addPlatformActionText = findViewById(R.id.add_platform_text);
+        TextView addRoomActionText = findViewById(R.id.add_room_text);
+
+        mAddPlatformFab.setVisibility(View.GONE);
+        mAddRoomFab.setVisibility(View.GONE);
+        addPlatformActionText.setVisibility(View.GONE);
+        addRoomActionText.setVisibility(View.GONE);
+        isAllFabsVisible = false;
+        mAddFab.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (!isAllFabsVisible) {
+                            mAddPlatformFab.show();
+                            mAddRoomFab.show();
+                            addPlatformActionText.setVisibility(View.VISIBLE);
+                            addRoomActionText.setVisibility(View.VISIBLE);
+
+                            isAllFabsVisible = true;
+                        } else {
+
+                            mAddPlatformFab.hide();
+                            mAddRoomFab.hide();
+                            addPlatformActionText.setVisibility(View.GONE);
+                            addRoomActionText.setVisibility(View.GONE);
+
+                            isAllFabsVisible = false;
+                        }
+                    }
+                });
+        mAddPlatformFab.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(homepage.this, "Platform Added", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        mAddRoomFab.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(homepage.this, "Room Added", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
     }
     public void updateName(){
@@ -337,24 +345,24 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     }
     public void selectRoom(){
         SharedPreferences userdetails = homepage.this.getSharedPreferences("userdetails", MODE_PRIVATE);
-        Gson gsonID = new Gson();
-        String jsonID = userdetails.getString("rooms_ID", "");
-        Type typeID = new TypeToken<List<String>>() {
+        Gson gsonDict = new Gson();
+        String jsonDict = userdetails.getString("rooms_dict", "");
+        Type typeDict = new TypeToken<Map<String,String>>() {
         }.getType();
-        List<String> rooms_ID = gsonID.fromJson(jsonID, typeID);
+        Map<String,String> rooms_dict = gsonDict.fromJson(jsonDict, typeDict);
         Gson gsonName = new Gson();
         String jsonName = userdetails.getString("rooms_name", "");
         Type typeName = new TypeToken<List<String>>() {
         }.getType();
         List<String> roomsName = gsonName.fromJson(jsonName, typeName);
         String[] array_name = roomsName.toArray(new String[0]);
-        String[] array_ID = rooms_ID.toArray(new String[0]);
         AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.MyFeedbackDialog);
         builder.setTitle("Select your room for feedback");
         builder.setItems(array_name, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String myroom=array_name[which];
+                String myroom_name=array_name[which];
+                String myroom=rooms_dict.get(myroom_name);
                 feedbackDialog(myroom);
             }
         });
@@ -436,12 +444,16 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             public void onRespSuccess(String result) throws JSONException {
                 List<String> roomsList = new ArrayList<>();
                 List<String> rooms_nameList = new ArrayList<>();
+                Map<String, String> map = new HashMap<String, String>();
                 JSONArray array = new JSONArray(result);
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject object = array.getJSONObject(i);
                     roomsList.add(object.getString("room_ID"));
                     rooms_nameList.add(object.getString("room_name"));
+                    map.put(object.getString("room_name"),object.getString("room_ID"));
+
                 }
+
                 SharedPreferences.Editor editor = userdetails.edit();
                 Gson gson_out= new Gson();
                 String json_out= gson_out.toJson(roomsList);
@@ -450,6 +462,10 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                 Gson gson_out2= new Gson();
                 String json_out2= gson_out2.toJson(rooms_nameList);
                 editor.putString("rooms_name", json_out2);
+                editor.commit();
+                Gson gson_out3= new Gson();
+                String json_out3= gson_out3.toJson(map);
+                editor.putString("rooms_dict", json_out3);
                 editor.commit();
                 selectRoom();
             }
@@ -470,16 +486,22 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         editor_c.clear();
         editor_c.commit();
 
-        SharedPreferences userdetails = getSharedPreferences("userdetails", MODE_PRIVATE);
+        SharedPreferences userdetails = homepage.this.getSharedPreferences("userdetails", MODE_PRIVATE);
         SharedPreferences.Editor editor_u = userdetails.edit();
         editor_u.clear();
         editor_u.commit();
-
+        /*
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(homepage.this);
         SharedPreferences.Editor editor_p = prefs.edit();
         editor_p.clear();
         editor_p.commit();
 
+         */
+
+        SharedPreferences status = homepage.this.getSharedPreferences("status", MODE_PRIVATE);
+        SharedPreferences.Editor editor = status.edit();
+        editor.putBoolean("login",false);
+        editor.commit();
         finish();
 
     }

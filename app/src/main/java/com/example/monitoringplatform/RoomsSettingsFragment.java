@@ -172,7 +172,7 @@ public class RoomsSettingsFragment extends PreferenceFragmentCompat implements S
             }
 
         }
-
+    //potrebbe non servire più
     public void savelist(){
         SharedPreferences userdetails = getActivity().getSharedPreferences("userdetails", MODE_PRIVATE);
         SharedPreferences.Editor editor = userdetails.edit();

@@ -31,10 +31,23 @@ import java.util.Map;
 import static android.content.Context.MODE_PRIVATE;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+    Map<String, ?> allEntries;
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
-        deletelist();
+        SharedPreferences status = getActivity().getSharedPreferences("status", MODE_PRIVATE);
+        List<String> settingsList= new ArrayList<>();
+        settingsList.add("name");
+        settingsList.add("platform_name");
+        settingsList.add("inactive_time");
+        settingsList.add("location");
+        Gson gson_out= new Gson();
+        String json_out= gson_out.toJson(settingsList);
+        SharedPreferences userdetails = getActivity().getSharedPreferences("userdetails", MODE_PRIVATE);
+        SharedPreferences.Editor editor = userdetails.edit();
+        editor.putString("profileSettings", json_out);
+        editor.commit();
         update(rootKey);
 
     }
@@ -43,6 +56,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -54,21 +68,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onPause() {
         getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         super.onPause();
-    }
-    public void deletelist() {
-
-        SharedPreferences userdetails = getActivity().getSharedPreferences("userdetails", MODE_PRIVATE);
-        Gson gsonID = new Gson();
-        String jsonID = userdetails.getString("edited", "");
-        Type typeID = new TypeToken<List<String>>() {
-        }.getType();
-        List<String> mList = gsonID.fromJson(jsonID, typeID);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        SharedPreferences.Editor editor = prefs.edit();
-        for (String temp : mList) {
-            editor.remove(temp);
-            editor.apply();
-        }
     }
 
     @Override
@@ -104,18 +103,24 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     public void update(String rootKey) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        Map<String, ?> allEntries = preferences.getAll();
         SharedPreferences currentdetails = getActivity().getSharedPreferences("currentdetails", Context.MODE_PRIVATE);
         String platform_ID = currentdetails.getString("platform_ID", "");
         SharedPreferences userdetails = getActivity().getSharedPreferences("userdetails", MODE_PRIVATE);
         String profilesURL=userdetails.getString("profilesURL","");
-        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-            Util.getPlatformInfo(profilesURL, platform_ID, entry.getKey(), getActivity(), new Util.ResponseCallback() {
+        Gson gson = new Gson();
+        String jsonS = userdetails.getString("profileSettings", "");
+        Type type = new TypeToken<List<String>>() {
+        }.getType();
+        List<String> profileSettings = gson.fromJson(jsonS, type);
+
+        for (int i = 0; i < profileSettings.size(); i++) {
+            int finalI = i;
+            Util.getPlatformInfo(profilesURL, platform_ID, profileSettings.get(i), getActivity(), new Util.ResponseCallback() {
 
                 @Override
                 public void onRespSuccess(String result) {
                     SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString(entry.getKey(),result);
+                    editor.putString(profileSettings.get(finalI),result);
                     editor.apply();
                     createPref(rootKey);
 

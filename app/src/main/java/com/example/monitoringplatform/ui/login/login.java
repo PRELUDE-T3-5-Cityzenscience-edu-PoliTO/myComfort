@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.preference.PreferenceManager;
 
 import android.util.Base64;
 import android.view.View;
@@ -97,6 +98,12 @@ public class login extends AppCompatActivity {
                                     getFeedback();
                                     parseJSON(result);
                                     Toast.makeText(login.this,"Welcome back "+user_ID,Toast.LENGTH_SHORT).show();
+                                    SharedPreferences status = login.this.getSharedPreferences("status", MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = status.edit();
+                                    editor.putBoolean("login",true);
+                                    editor.putBoolean("firstOpening",true);
+                                    editor.commit();
+                                    //loadSettings();
                                     Intent intent=new Intent(login.this, homepage.class);
                                     startActivity(intent);
                                     finish();
@@ -122,6 +129,16 @@ public class login extends AppCompatActivity {
                 }
             }
         });
+    }
+    public void loadSettings(){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(login.this);
+        SharedPreferences status = login.this.getSharedPreferences("status", MODE_PRIVATE);
+        Map<String, ?> allEntries = status.getAll();
+        SharedPreferences.Editor editor = prefs.edit();
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            editor.putBoolean(entry.getKey(),(Boolean) entry.getValue());
+            editor.commit();
+        }
     }
 
     public void getServer(){

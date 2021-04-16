@@ -30,6 +30,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -114,10 +115,12 @@ public class rooms_settings extends AppCompatActivity {
                 List<String> roomsList = new ArrayList<>();
                 List<String> rooms_nameList = new ArrayList<>();
                 JSONArray array = new JSONArray(result);
+                Map<String, String> map = new HashMap<String, String>();
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject object = array.getJSONObject(i);
                     roomsList.add(object.getString("room_ID"));
                     rooms_nameList.add(object.getString("room_name"));
+                    map.put(object.getString("room_name"),object.getString("room_ID"));
                 }
                 SharedPreferences.Editor editor = userdetails.edit();
                 Gson gson_out= new Gson();
@@ -127,6 +130,10 @@ public class rooms_settings extends AppCompatActivity {
                 Gson gson_out2= new Gson();
                 String json_out2= gson_out2.toJson(rooms_nameList);
                 editor.putString("rooms_name", json_out2);
+                editor.commit();
+                Gson gson_out3= new Gson();
+                String json_out3= gson_out3.toJson(map);
+                editor.putString("rooms_dict", json_out3);
                 editor.commit();
                 createList();
             }
