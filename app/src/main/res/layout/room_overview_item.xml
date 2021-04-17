@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:layout_width="205dp"
+android:layout_height="wrap_content"
+android:layout_marginLeft="-5dp"
+app:cardCornerRadius="18dp"
+app:cardElevation="12dp"
+app:cardUseCompatPadding="true"
+app:cardPreventCornerOverlap="false">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_margin="5dp"
+    android:layout_marginTop="10dp">
+
+    <ImageView
+        android:id="@+id/room_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_baseline_room_preferences_24"
+        android:padding="2dp" />
+
+    <TextView
+        android:id="@+id/room_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="-25dp"
+        android:layout_marginTop="30dp"
+        android:layout_toEndOf="@+id/room_icon"
+        android:text="Room"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/temperature"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/room_name"
+        android:layout_marginStart="-30dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/room_icon"
+        android:tint="#E91E63"
+        android:src="@drawable/ic_baseline_thermostat_24"
+        />
+
+    <TextView
+        android:id="@+id/temperature_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/room_name"
+        android:layout_marginStart="-1dp"
+        android:layout_marginLeft="-100dp"
+        android:layout_marginTop="13dp"
+        android:layout_toEndOf="@+id/temperature"
+        android:layout_toRightOf="@id/temperature"
+        android:gravity="center"
+        android:text="21°C"
+        android:textSize="9sp" />
+
+    <ImageView
+        android:id="@+id/humidity"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/room_name"
+        android:layout_toRightOf="@+id/temperature_value"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_baseline_humidity" />
+    <TextView
+        android:id="@+id/humidity_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/room_name"
+        android:layout_marginStart="1dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="13dp"
+        android:layout_toEndOf="@+id/humidity"
+        android:layout_toRightOf="@id/humidity"
+        android:gravity="center"
+        android:text="52%"
+        android:textSize="9sp" />
+
+    <ImageView
+        android:id="@+id/wind"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/room_name"
+        android:layout_toRightOf="@+id/humidity_value"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_baseline_air_24"
+        android:tint="#595857"/>
+    <TextView
+        android:id="@+id/wind_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/room_name"
+        android:layout_marginStart="1dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="13dp"
+        android:layout_toEndOf="@+id/wind"
+        android:layout_toRightOf="@id/wind"
+        android:gravity="center"
+        android:text="0.1 kmh"
+        android:textSize="9sp" />
+
+    <TextView
+        android:id="@+id/PMV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="93dp"
+        android:layout_marginTop="0dp"
+        android:layout_toEndOf="@+id/room_icon"
+        android:text="COLD"
+        android:textColor="@color/colorAccent"
+        android:textSize="15sp" />
+
+</RelativeLayout>
+
+
+
+</androidx.cardview.widget.CardView>

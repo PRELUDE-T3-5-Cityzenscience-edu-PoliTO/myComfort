@@ -75,11 +75,6 @@ public class GeneralSettingsFragment extends PreferenceFragmentCompat implements
             //myswitch.setChecked(true);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE, 04);
-
-            // setRepeating() lets you specify a precise custom interval--in this case,
-            // 20 minutes.
             alertManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
             1000 * 60*60*4, pendingIntent);
         }

@@ -91,7 +91,7 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             @Override
             public void onClick(View v) {
                 //Toast.makeText(homepage.this,"My overview",Toast.LENGTH_SHORT).show();
-                Intent intent=new Intent(homepage.this, MainActivity.class);
+                Intent intent=new Intent(homepage.this, overview.class);
                 startActivity(intent);
             }
         });
@@ -266,7 +266,9 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                     Firstflag++;
                 }
                 String current_ID=platformsList.get(position);
+                String current_Name=platforms_nameList.get(position);
                 Util.saveData(homepage.this,"currentdetails","platform_ID",current_ID);
+                Util.saveData(homepage.this,"currentdetails","platform_name",current_Name);
                 /*
                 if(Firstflag>1){
 

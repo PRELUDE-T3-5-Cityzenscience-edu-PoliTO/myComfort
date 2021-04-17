@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MonitoringPlatform"
         android:usesCleartextTraffic="true">
+        <activity android:name=".tips"></activity>
         <activity android:name=".notification" />
         <activity android:name=".network" />
         <activity android:name=".my_platforms" />

@@ -168,7 +168,7 @@
                     android:elevation="12dp"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="8dp">
+                    app:cardCornerRadius="25dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -215,7 +215,7 @@
                     android:elevation="12dp"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="8dp">
+                    app:cardCornerRadius="25dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -275,7 +275,7 @@
                     android:elevation="12dp"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="8dp">
+                    app:cardCornerRadius="25dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -322,7 +322,7 @@
                     android:elevation="12dp"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="8dp">
+                    app:cardCornerRadius="25dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -382,7 +382,7 @@
                     android:elevation="12dp"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="8dp">
+                    app:cardCornerRadius="25dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -429,7 +429,7 @@
                     android:elevation="12dp"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="8dp">
+                    app:cardCornerRadius="25dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
