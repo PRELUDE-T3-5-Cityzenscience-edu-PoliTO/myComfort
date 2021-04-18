@@ -5,9 +5,9 @@
         android:title="Room settings"
         android:icon="@drawable/ic_baseline_room_preferences_24"/>
     <item
-        android:id="@+id/tips"
-        android:title="Tips"
-        android:icon="@drawable/ic_tips"/>
+        android:id="@+id/graph"
+        android:title="Graphs"
+        android:icon="@drawable/ic_graphs"/>
     <item
         android:id="@+id/network"
         android:title="Sensors"

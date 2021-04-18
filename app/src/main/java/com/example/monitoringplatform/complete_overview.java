@@ -96,8 +96,8 @@ public class complete_overview extends AppCompatActivity {
                                 Intent intent_settings=new Intent(complete_overview.this, rooms_settings.class);
                                 startActivity(intent_settings);
                                 break;
-                            case R.id.tips:
-                                Intent intent_tips=new Intent(complete_overview.this, tips.class);
+                            case R.id.graph:
+                                Intent intent_tips=new Intent(complete_overview.this, MainActivity2.class);
                                 startActivity(intent_tips);
                                 break;
                             case R.id.network:
