@@ -9,8 +9,8 @@
         android:title="Tips"
         android:icon="@drawable/ic_tips"/>
     <item
-        android:id="@+id/network"
-        android:title="Sensors"
-        android:icon="@drawable/ic_network"/>
+        android:id="@+id/mysettings"
+        android:title="Settings"
+        android:icon="@drawable/ic_settings"/>
 </menu>
 

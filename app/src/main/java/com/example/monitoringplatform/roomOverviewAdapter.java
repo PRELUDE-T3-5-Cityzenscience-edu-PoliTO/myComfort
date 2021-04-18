@@ -90,6 +90,7 @@ public class roomOverviewAdapter extends RecyclerView.Adapter<roomOverviewAdapte
         holder.mHum.setText(currentItem.getHum());
         holder.mWind.setText(currentItem.getWind());
         holder.mPmv.setText(currentItem.getPmv());
+        
         if (currentItem.getPmv().equals("WARM")){
             holder.mPmv.setTextColor(Color.parseColor("#FFFF9800"));
 

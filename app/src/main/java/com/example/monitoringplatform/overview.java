@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,9 +14,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.application.recyclerviewproject.device_item;
 import com.example.application.recyclerviewproject.roomOverview_item;
-import com.example.application.recyclerviewproject.room_item;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -35,6 +33,7 @@ import java.util.Map;
 
 public class overview extends AppCompatActivity {
     private RecyclerView mRecyclerView;
+    private roomOverviewAdapter mAdapter;
     private ArrayList<roomOverview_item> rList = new ArrayList<>();
     private String platform_ID;
     private List<String> rooms= new ArrayList<>();
@@ -53,6 +52,7 @@ public class overview extends AppCompatActivity {
         retrieveRoomsList();
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.refreshLayoutOverview);
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -68,8 +68,8 @@ public class overview extends AppCompatActivity {
                                 Intent intent_tips=new Intent(overview.this, tips.class);
                                 startActivity(intent_tips);
                                 break;
-                            case R.id.network:
-                                Intent intent_network=new Intent(overview.this, network.class);
+                            case R.id.mysettings:
+                                Intent intent_network=new Intent(overview.this, notification.class);
                                 startActivity(intent_network);
                                 break;
 
@@ -77,7 +77,22 @@ public class overview extends AppCompatActivity {
                         return false;
                     }
                 });
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        onRestart();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+        );
 
+
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        retrieveRoomsList();
 
     }
     public void createDict(){
@@ -91,11 +106,33 @@ public class overview extends AppCompatActivity {
             rooms_dict.put(entry.getValue(),entry.getKey());
         }
     }
+    public void openRoomOverview(int position){
+        String room_name = rList.get(position).getRoom();
+        String room_ID = null;
+        SharedPreferences userdetails = overview.this.getSharedPreferences("userdetails", MODE_PRIVATE);
+        Gson gsonDict = new Gson();
+        String jsonDict = userdetails.getString("rooms_dict", "");
+        Type typeDict = new TypeToken<Map<String,String>>() {
+        }.getType();
+        Map<String,String> rooms_dict_old = gsonDict.fromJson(jsonDict, typeDict);
+        for (Map.Entry<String, String> entry : rooms_dict_old.entrySet()) {
+            if(entry.getKey().equals(room_name)){
+                room_ID=entry.getValue();
+                break;
+            }
+        }
+        Util.saveData(overview.this,"currentdetails","room_ID",room_ID);
+        Util.saveData(overview.this,"currentdetails","room_name",room_name);
+        Intent intent= new Intent(overview.this, complete_overview.class);
+        startActivity(intent);
+
+
+    }
     public void startView(){
         mRecyclerView=findViewById(R.id.Rooms_overview);
         mRecyclerView.setHasFixedSize(true);
 
-        roomOverviewAdapter mAdapter=new roomOverviewAdapter(rList);
+        mAdapter=new roomOverviewAdapter(rList);
 
         // setting grid layout manager to implement grid view.
         // in this method '2' represents number of columns to be displayed in grid view.
@@ -103,6 +140,14 @@ public class overview extends AppCompatActivity {
 
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(new roomOverviewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                openRoomOverview(position);
+
+
+            }
+        });
 
     }
     public void buildRoom(JSONArray mylist,String room_ID,Float pmv) throws JSONException {
@@ -149,7 +194,7 @@ public class overview extends AppCompatActivity {
 
 
     }
-    public String computePMV(Float pmv){
+    public static String computePMV(Float pmv){
         if(pmv>=-0.5 && pmv<=0.5){
             return("GOOD");
         }else if(pmv>0.5 && pmv<=2){
@@ -166,6 +211,7 @@ public class overview extends AppCompatActivity {
     }
 
     public void retrieveRoomsList(){
+        rList.clear();
         SharedPreferences currentdetails = overview.this.getSharedPreferences("currentdetails", Context.MODE_PRIVATE);
         platform_ID = currentdetails.getString("platform_ID", "");
         SharedPreferences userdetails = overview.this.getSharedPreferences("userdetails", MODE_PRIVATE);
@@ -173,8 +219,7 @@ public class overview extends AppCompatActivity {
         Util.getPlatformInfo(serverURL, platform_ID, "rooms", overview.this, new Util.ResponseCallback() {
             @Override
             public void onRespSuccess(String result) throws JSONException {
-                JSONArray array = new JSONArray(result);
-                Map<String, String> map = new HashMap<String, String>();
+                JSONArray array = new JSONArray( result.replace("/","."));
                 for (int i = 0; i < array.length(); i++) {
                     JSONArray resultList = new JSONArray();
                     JSONObject object = array.getJSONObject(i);

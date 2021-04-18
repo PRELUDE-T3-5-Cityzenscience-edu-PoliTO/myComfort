@@ -75,8 +75,10 @@ public class GeneralSettingsFragment extends PreferenceFragmentCompat implements
             //myswitch.setChecked(true);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
+            calendar.set(Calendar.HOUR_OF_DAY, 7);
+            calendar.set(Calendar.MINUTE, 30);
             alertManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-            1000 * 60*60*4, pendingIntent);
+            1000*60*60, pendingIntent);
         }
         else{
             //myswitch.setChecked(false);
