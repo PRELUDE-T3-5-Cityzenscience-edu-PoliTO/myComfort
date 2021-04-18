@@ -11,6 +11,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -140,14 +141,40 @@ public class complete_overview extends AppCompatActivity {
         PMV_value.setText(String.valueOf(df.format(pmv)));
         PPD_value.setText(String.valueOf(df.format(ppd))+"%");
         String status=overview.computePMV(pmv);
+        setcolor(status);
         PMV_text.setText(status);
         setImage(pmv);
 
     }
+    public void setcolor(String pmv){
+        if (pmv.equals("WARM")){
+            PMV_text.setTextColor(Color.parseColor("#FFFF9800"));
+            PMV_value.setTextColor(Color.parseColor("#FFFF9800"));
+
+        }else if (pmv.equals("GOOD")){
+            PMV_text.setTextColor(Color.parseColor("#5CC615"));
+            PMV_value.setTextColor(Color.parseColor("#5CC615"));
+        }else if(pmv.equals("HOT")){
+            PMV_text.setTextColor(Color.parseColor("#FFE91E63"));
+            PMV_value.setTextColor(Color.parseColor("#FFE91E63"));
+
+        }
+        else if(pmv.equals("COOL")){
+            PMV_text.setTextColor(Color.parseColor("#FF01BCAA"));
+            PMV_value.setTextColor(Color.parseColor("#FF01BCAA"));
+
+        }
+        else if(pmv.equals("COLD")){
+            PMV_text.setTextColor(Color.parseColor("#FF0146BC"));
+            PMV_value.setTextColor(Color.parseColor("#FF0146BC"));
+
+        }
+
+    }
     public void setImage(Float pmv){
-        if(pmv<0.5){
+        if(pmv<-0.5){
             PMV_image.setImageResource(R.drawable.cold_icon);
-        }else if(pmv<0.5){
+        }else if(pmv>0.5){
             PMV_image.setImageResource(R.drawable.hot_icon);
         }else{
             PMV_image.setImageResource(R.drawable.good_icon);
