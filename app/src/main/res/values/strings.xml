@@ -43,4 +43,6 @@
     <string name="existingErr"><u>Already registered!</u></string>
     <string name="new_name_description">Enter platform name</string>
     <string name="new_location_description">Enter your location</string>
+    <string name="new_room">New Room</string>
+    <string name="new_room_description">Enter room name</string>
 </resources>

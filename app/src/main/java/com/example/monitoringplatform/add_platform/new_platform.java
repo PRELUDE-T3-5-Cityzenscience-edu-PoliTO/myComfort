@@ -1,5 +1,6 @@
 package com.example.monitoringplatform.add_platform;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -23,6 +24,9 @@ public class new_platform extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_platform);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         Button next=findViewById(R.id.button_next);
         TextView enterPlatform=findViewById(R.id.newplatformID);
         TextView platformIDerror=findViewById(R.id.IDerror);
@@ -104,5 +108,10 @@ public class new_platform extends AppCompatActivity {
 
         boolean isReady = enterPlatform.getText().toString().length() > 5;
         next.setEnabled(isReady);
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }

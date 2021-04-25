@@ -35,7 +35,7 @@
             app:title="Set preferences">
             <intent
                 android:targetPackage="com.example.monitoringplatform"
-                android:targetClass="com.example.monitoringplatform.rooms_settings" />
+                android:targetClass="com.example.monitoringplatform.preferences.rooms_settings" />
         </Preference>
 
 

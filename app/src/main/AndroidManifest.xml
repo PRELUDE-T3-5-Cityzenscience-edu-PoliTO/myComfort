@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MonitoringPlatform"
         android:usesCleartextTraffic="true">
-        <activity android:name=".add_platform.new_platform_form_location"></activity>
+        <activity android:name=".add_room.new_room_form_name" />
+        <activity android:name=".add_platform.new_platform_form_location" />
         <activity android:name=".add_platform.new_platform_form" />
         <activity android:name=".add_platform.new_platform" />
         <activity android:name=".complete_overview" />

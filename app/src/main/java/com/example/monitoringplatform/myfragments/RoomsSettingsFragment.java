@@ -195,7 +195,7 @@ public class RoomsSettingsFragment extends PreferenceFragmentCompat implements S
 
                 @Override
                 public void onRespError(String result) {
-                    Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
 
                 }
             });

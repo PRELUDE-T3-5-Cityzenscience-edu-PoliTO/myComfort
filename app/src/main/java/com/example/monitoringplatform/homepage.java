@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.monitoringplatform.add_platform.new_platform;
+import com.example.monitoringplatform.add_room.new_room_form_name;
 import com.example.monitoringplatform.preferences.notification;
 import com.example.monitoringplatform.preferences.profile_settings;
 import com.example.monitoringplatform.preferences.rooms_devices;
@@ -232,8 +233,8 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent newPlatformActivity= new Intent(homepage.this,new_platform.class);
-                        startActivity(newPlatformActivity);
+                        Intent newRoomActivity= new Intent(homepage.this, new_room_form_name.class);
+                        startActivity(newRoomActivity);
 
                     }
                 });

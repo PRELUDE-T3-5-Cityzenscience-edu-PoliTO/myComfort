@@ -164,9 +164,12 @@
                         android:layout_marginStart="26dp"
                         android:layout_marginTop="16dp"
                         android:text="Welcome"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeMinTextSize="8sp"
+                        android:autoSizeMaxTextSize="16sp"
+                        android:autoSizeStepGranularity="2sp"
                         android:textAllCaps="true"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="16sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />

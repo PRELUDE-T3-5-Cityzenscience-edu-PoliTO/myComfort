@@ -1,5 +1,6 @@
 package com.example.monitoringplatform.add_platform;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -44,6 +45,8 @@ public class new_platform_form_location extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_platform_form_location);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         Intent i = getIntent();
         Bundle extras = i.getExtras();
         if(extras.containsKey("platform_ID")) {
@@ -189,4 +192,10 @@ public class new_platform_form_location extends AppCompatActivity {
         };
         AppSingleton.getInstance(new_platform_form_location.this).addToRequestQueue(JSONreq);
     }
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+
 }
