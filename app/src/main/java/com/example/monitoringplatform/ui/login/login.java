@@ -26,12 +26,14 @@ import com.example.monitoringplatform.R;
 import com.example.monitoringplatform.Util;
 import com.example.monitoringplatform.homepage;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,12 +48,15 @@ public class login extends AppCompatActivity {
     private String clientsURL;
     private String profilesURI=null;
     private String profilesURL;
+    private String APIKEY;
     private String user_ID;
     private List<String> platforms= new ArrayList<>();
     private String inputName;
     private String inputPass;
     private String serverURI;
     private String feedbackURI;
+    Map<String, String> platforms_dict = new HashMap<String, String>();
+    private int myflag;
 
 
     @Override
@@ -61,6 +66,11 @@ public class login extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login2);
+        SharedPreferences userdetails = login.this.getSharedPreferences("userdetails", MODE_PRIVATE);
+        SharedPreferences.Editor editor = userdetails.edit();
+        editor.clear();
+        editor.commit();
+
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
@@ -97,16 +107,6 @@ public class login extends AppCompatActivity {
                                     getServer();
                                     getFeedback();
                                     parseJSON(result);
-                                    Toast.makeText(login.this,"Welcome back "+user_ID,Toast.LENGTH_SHORT).show();
-                                    SharedPreferences status = login.this.getSharedPreferences("status", MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = status.edit();
-                                    editor.putBoolean("login",true);
-                                    editor.putBoolean("firstOpening",true);
-                                    editor.commit();
-                                    //loadSettings();
-                                    Intent intent=new Intent(login.this, homepage.class);
-                                    startActivity(intent);
-                                    finish();
                                 }
 
                                 @Override
@@ -177,14 +177,17 @@ public class login extends AppCompatActivity {
     public void parseJSON(JSONObject object){
         List<String> myList= new ArrayList<>();
         List<String> edited= new ArrayList<>();
+        Util.saveData(login.this,"userdetails","edited",edited.toString());
         try {
-            this.user_ID=object.getString("user_ID");
+            user_ID=object.getString("user_ID");
+            Util.saveData(login.this,"userdetails","username",user_ID);
+            Util.saveData(login.this,"userdetails","name",user_ID);
             JSONObject temp= new JSONObject(object.toString());
             JSONArray jsonArray = temp.getJSONArray("catalog_list");
+            myflag=jsonArray.length();
             for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject plat = jsonArray.getJSONObject(i);
-                String plat_ID = plat.getString("catalog_ID");
-                this.platforms.add(plat_ID);
+                String plat_ID = jsonArray.getString(i);
+                platforms.add(plat_ID);
                 Util.getService(login.this,login.this.apiURL, profilesURI, "profilesURL", new Util.ServiceCallback() {
                     @Override
                     public void onReqSuccess(JSONObject result) {
@@ -194,15 +197,29 @@ public class login extends AppCompatActivity {
 
                             @Override
                             public void onRespSuccess(String result) {
-                                myList.add(result);
-                                SharedPreferences sharedPrefs = login.this.getSharedPreferences("userdetails", MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPrefs.edit();
-                                Gson gsonN = new Gson();
+                                platforms_dict.put(plat_ID,result);
+                                Gson gson_out= new Gson();
+                                String json_out= gson_out.toJson(platforms_dict);
+                                SharedPreferences.Editor editor = userdetails.edit();
+                                editor.putString("platforms_dict", json_out);
+                                editor.apply();
+                                myflag--;
+                                if(myflag==0){
 
-                                String jsonN = gsonN.toJson(myList);
+                                    Toast.makeText(login.this,"Welcome back "+user_ID,Toast.LENGTH_SHORT).show();
+                                    SharedPreferences status = login.this.getSharedPreferences("status", MODE_PRIVATE);
+                                    Util.saveData(login.this,"userdetails","password",inputPass);
+                                    SharedPreferences.Editor editor2 = status.edit();
+                                    editor2.putBoolean("login",true);
+                                    editor2.putBoolean("firstOpening",true);
+                                    editor2.apply();
+                                    //loadSettings();
+                                    Util.saveData(login.this,"currentdetails","platform_ID",platforms.get(0));
+                                    Intent intent=new Intent(login.this, homepage.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
 
-                                editor.putString("platforms_name", jsonN);
-                                editor.commit();
                             }
 
                             @Override
@@ -222,17 +239,6 @@ public class login extends AppCompatActivity {
 
 
             }
-            SharedPreferences sharedPrefs = login.this.getSharedPreferences("userdetails", MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPrefs.edit();
-
-            Util.saveData(login.this,"userdetails","username",this.user_ID);
-            Util.saveData(login.this,"userdetails","name",this.user_ID);
-            Util.saveData(login.this,"userdetails","edited",edited.toString());
-            Util.saveData(login.this,"currentdetails","platform_ID",this.platforms.get(0));
-            Gson gson = new Gson();
-            String json = gson.toJson(this.platforms);
-            editor.putString("platforms", json);
-            editor.commit();
 
 
         } catch (JSONException e) {

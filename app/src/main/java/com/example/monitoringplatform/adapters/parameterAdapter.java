@@ -1,4 +1,4 @@
-package com.example.monitoringplatform;
+package com.example.monitoringplatform.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,14 +8,14 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.application.recyclerviewproject.room_item;
+import com.example.application.recyclerviewproject.parameter_item;
 import com.example.monitoringplatform.R;
 
 import java.util.ArrayList;
 
 
-public class roomAdapter extends RecyclerView.Adapter<roomAdapter.ExampleViewHolder> {
-    private ArrayList<room_item> mList;
+public class parameterAdapter extends RecyclerView.Adapter<parameterAdapter.ExampleViewHolder> {
+    private ArrayList<parameter_item> mList;
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener{
@@ -27,15 +27,19 @@ public class roomAdapter extends RecyclerView.Adapter<roomAdapter.ExampleViewHol
     }
 
     public static class ExampleViewHolder extends RecyclerView.ViewHolder {
-        public ImageView mImageView;
-        public TextView mTextView1;
-        public TextView mTextView2;
+        public ImageView mIcon;
+        public TextView mParamter;
+        public TextView mValue;
+        public TextView mTime;
+
 
         public ExampleViewHolder(View itemView, OnItemClickListener listener) {
             super(itemView);
-            mImageView = itemView.findViewById(R.id.imageView);
-            mTextView1 = itemView.findViewById(R.id.textView);
-            mTextView2 = itemView.findViewById(R.id.textView2);
+            mIcon = itemView.findViewById(R.id.parameter_icon);
+            mParamter = itemView.findViewById(R.id.parameter_name);
+            mValue = itemView.findViewById(R.id.parameter_value);
+            mTime = itemView.findViewById(R.id.parameter_time);
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -52,24 +56,26 @@ public class roomAdapter extends RecyclerView.Adapter<roomAdapter.ExampleViewHol
         }
     }
 
-    public roomAdapter(ArrayList<room_item> exampleList) {
+    public parameterAdapter(ArrayList<parameter_item> exampleList) {
         mList = exampleList;
     }
 
     @Override
     public ExampleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.room_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.parameter_item, parent, false);
         ExampleViewHolder evh = new ExampleViewHolder(v,mListener);
         return evh;
     }
 
     @Override
     public void onBindViewHolder(ExampleViewHolder holder, int position) {
-        room_item currentItem = mList.get(position);
+        parameter_item currentItem = mList.get(position);
 
-        holder.mImageView.setImageResource(currentItem.getImageResource());
-        holder.mTextView1.setText(currentItem.getText1());
-        holder.mTextView2.setText(currentItem.getText2());
+        holder.mIcon.setImageResource(currentItem.getIcon());
+        holder.mParamter.setText(currentItem.getParameter());
+        holder.mValue.setText(currentItem.getValue());
+        holder.mTime.setText(currentItem.getTime());
+
     }
 
     @Override

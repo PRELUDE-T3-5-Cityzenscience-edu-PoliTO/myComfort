@@ -1,15 +1,12 @@
-package com.example.monitoringplatform;
+package com.example.monitoringplatform.preferences;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
-import java.util.Calendar;
+import com.example.monitoringplatform.R;
+import com.example.monitoringplatform.myfragments.GeneralSettingsFragment;
 
 public class notification extends AppCompatActivity {
 

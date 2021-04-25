@@ -6,17 +6,10 @@ import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.Dialog;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,38 +18,50 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ListView;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.monitoringplatform.add_platform.new_platform;
+import com.example.monitoringplatform.preferences.notification;
+import com.example.monitoringplatform.preferences.profile_settings;
+import com.example.monitoringplatform.preferences.rooms_devices;
 import com.example.monitoringplatform.ui.login.login;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
+    private String APIKEY;
     public int Firstflag=0;
     Boolean isAllFabsVisible;
+    ImageView conditionImage;
+    TextView tempExt;
+    TextView humExt;
+    TextView windExt;
+    TextView locationText;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+        onRestart();
         // register all the ImageButtons with their appropriate IDs
         ImageButton backB = (ImageButton) findViewById(R.id.backB);
         ImageButton logOutB = (ImageButton) findViewById(R.id.logOutB);
@@ -65,6 +70,11 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         // register all the Buttons with their appropriate IDs
         Button myplatforms = findViewById(R.id.myplatforms);
         Button editProfileB = findViewById(R.id.editProfileB);
+        conditionImage=findViewById(R.id.conditionImage);
+        tempExt=findViewById(R.id.temperature_valueExt);
+        humExt=findViewById(R.id.humidity_valueExt);
+        windExt=findViewById(R.id.wind_valueExt);
+        locationText=findViewById(R.id.city);
 
         //
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.refreshLayout);
@@ -81,7 +91,7 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        onResume();
+                        onRestart();
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }
@@ -126,7 +136,7 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             @Override
             public void onClick(View v) {
                 onStop();
-                Intent intent= new Intent(homepage.this,profile_settings.class);
+                Intent intent= new Intent(homepage.this, profile_settings.class);
                 startActivity(intent);
             }
         });
@@ -164,8 +174,9 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         super.onPause();
     }
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onRestart() {
+        super.onRestart();
+        getWeather();
         createFloating();
         updateName();
         updatePlatformName();
@@ -212,53 +223,52 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(homepage.this, "Platform Added", Toast.LENGTH_SHORT).show();
+                        Intent newPlatformActivity= new Intent(homepage.this, new_platform.class);
+                        startActivity(newPlatformActivity);
+                        //finish();
                     }
                 });
         mAddRoomFab.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(homepage.this, "Room Added", Toast.LENGTH_SHORT).show();
+                        Intent newPlatformActivity= new Intent(homepage.this,new_platform.class);
+                        startActivity(newPlatformActivity);
+
                     }
                 });
 
     }
     public void updateName(){
         SharedPreferences userdetails = getSharedPreferences("userdetails", MODE_PRIVATE);
-        String profilesURL=userdetails.getString("profilesURL","");
-        SharedPreferences currentdetails = homepage.this.getSharedPreferences("currentdetails", Context.MODE_PRIVATE);
-        String platform_ID = currentdetails.getString("platform_ID", "");
-        Util.getPlatformInfo(profilesURL, platform_ID, "name", homepage.this, new Util.ResponseCallback() {
-            @Override
-            public void onRespSuccess(String result) throws JSONException {
-                final TextView username = (TextView) findViewById(R.id.textView2);
-                username.setText("WELCOME "+result);
-                Util.saveData(homepage.this,"userdetails","name",result);
-
-            }
-
-            @Override
-            public void onRespError(String result) {
-
-            }
-        });
+        String user=userdetails.getString("name","");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(homepage.this);
+        String result=prefs.getString("name",user);
+        final TextView username = (TextView) findViewById(R.id.textView2);
+        username.setText("WELCOME "+result);
+        Util.saveData(homepage.this,"userdetails","name",result);
     }
     public void createSpinner(){
         final Spinner spinner = (Spinner) findViewById(R.id.spinner);
         SharedPreferences userdetails = getSharedPreferences("userdetails", MODE_PRIVATE);
-        Gson gson = new Gson();
-        String jsonN = userdetails.getString("platforms_name", "");
-        Type type = new TypeToken<List<String>>() {}.getType();
-        List<String> platforms_nameList = gson.fromJson(jsonN, type);
-        Gson gsonID = new Gson();
-        String jsonID = userdetails.getString("platforms", "");
-        Type typeID = new TypeToken<List<String>>() {
+        Gson gsonDict = new Gson();
+        String jsonDict = userdetails.getString("platforms_dict", "");
+        Type typeDict = new TypeToken<Map<String,String>>() {
         }.getType();
-        List<String> platformsList = gsonID.fromJson(jsonID, typeID);
+        Map<String,String> platforms_dict = gsonDict.fromJson(jsonDict, typeDict);
+        List<String> platforms_nameList = new ArrayList();
+        List<String> platformsList = new ArrayList();
+        SharedPreferences currentdetails = getSharedPreferences("currentdetails", MODE_PRIVATE);
+        String current_name=currentdetails.getString("platform_name","");
+        for (Map.Entry<String, String> entry : platforms_dict.entrySet()) {
+            platforms_nameList.add(entry.getValue());
+            platformsList.add(entry.getKey());
+
+        }
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, platforms_nameList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        spinner.setSelection(platforms_nameList.indexOf(current_name));
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -286,44 +296,40 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         });
     }
 
-
     public void updatePlatformName() {
-        SharedPreferences currentdetails = homepage.this.getSharedPreferences("currentdetails", Context.MODE_PRIVATE);
-        String platform_ID = currentdetails.getString("platform_ID", "");
+        //downloadList();
+
         SharedPreferences userdetails = getSharedPreferences("userdetails", MODE_PRIVATE);
-        String profilesURL=userdetails.getString("profilesURL","");
-        Gson gsonID = new Gson();
-        String jsonID = userdetails.getString("platforms", "");
-        Type typeID = new TypeToken<List<String>>() {
+        String profilesURL = userdetails.getString("profilesURL", "");
+        Gson gsonDict = new Gson();
+        String jsonDict = userdetails.getString("platforms_dict", "");
+        Type typeDict = new TypeToken<Map<String,String>>() {
         }.getType();
-        List<String> platformsList = gsonID.fromJson(jsonID, typeID);
-        int position = platformsList.indexOf(platform_ID);
-        Util.getPlatformInfo(profilesURL, platform_ID, "platform_name",homepage.this, new Util.ResponseCallback() {
+        Map<String,String> platforms_dict = gsonDict.fromJson(jsonDict, typeDict);
+        
+        for (Map.Entry<String, String> entry : platforms_dict.entrySet()) { 
+            Util.getPlatformInfo(profilesURL, entry.getKey(), "platform_name", homepage.this, new Util.ResponseCallback() {
 
             @Override
             public void onRespSuccess(String result) {
 
-                Gson gson = new Gson();
-                String jsonN = userdetails.getString("platforms_name", "");
-                Type type = new TypeToken<List<String>>() {
-                }.getType();
-                List<String> platforms_nameList = gson.fromJson(jsonN, type);
-                platforms_nameList.set(position,result.replace("\"",""));
-                Gson gson_out= new Gson();
-                String json_out= gson_out.toJson(platforms_nameList);
+                entry.setValue(result.replace("\"", ""));
+                Gson gson_out = new Gson();
+                String json_out = gson_out.toJson(platforms_dict);
                 SharedPreferences.Editor editor = userdetails.edit();
-                editor.putString("platforms_name", json_out);
-                editor.commit();
+                editor.putString("platforms_dict", json_out);
+                editor.apply();
                 createSpinner();
 
             }
 
             @Override
             public void onRespError(String result) {
-                Toast.makeText(homepage.this,result,Toast.LENGTH_SHORT).show();
+                Toast.makeText(homepage.this, result, Toast.LENGTH_SHORT).show();
 
             }
         });
+    }
 
     }
 
@@ -501,6 +507,8 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
 
          */
 
+
+
         SharedPreferences status = homepage.this.getSharedPreferences("status", MODE_PRIVATE);
         SharedPreferences.Editor editor = status.edit();
         editor.putBoolean("login",false);
@@ -508,4 +516,85 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         finish();
 
     }
+    public void getWeather(){
+        String apiURL="https://api.openweathermap.org/data/2.5/weather";
+        try {
+            APIKEY = Util.getProperty("apiKEY",homepage.this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(homepage.this);
+        String location=prefs.getString("location","");
+        if(location.equals("")) {
+            updateLocation(apiURL);
+        }else{
+            WeatherReq(apiURL,location);
+        }
+
+
+    }
+    public void WeatherReq(String apiURL,String location) {
+        Util.weatherReq(homepage.this, apiURL, location, APIKEY, new Util.WeatherCallback() {
+            @Override
+            public void onRespSuccess(JSONObject result) throws JSONException {
+                parseCondition(result,location);
+
+            }
+
+            @Override
+            public void onRespError(String result) {
+                Toast.makeText(homepage.this,result,Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+    }
+
+    private void parseCondition(JSONObject result,String city) {
+        try {
+            String icon=result.getJSONArray("weather").getJSONObject(0).getString("icon");
+            //Toast.makeText(homepage.this,icon,Toast.LENGTH_SHORT).show();
+            String iconUrl = "http://openweathermap.org/img/w/" + icon + ".png";
+            Picasso.with(homepage.this).load(iconUrl).into(conditionImage);
+            Double temp=result.getJSONObject("main").getDouble("temp");
+            Double humidity=result.getJSONObject("main").getDouble("humidity");
+            Double wind=result.getJSONObject("wind").getDouble("speed");
+            tempExt.setText("T: "+temp.toString()+" °C");
+            humExt.setText("H: "+humidity.toString()+"%");
+            windExt.setText("W: "+wind.toString()+"km/h");
+            locationText.setText(city);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
+    public void updateLocation(String apiurl){
+        SharedPreferences userdetails = getSharedPreferences("userdetails", MODE_PRIVATE);
+        SharedPreferences currentdetails = getSharedPreferences("currentdetails", MODE_PRIVATE);
+        String profilesURL = userdetails.getString("profilesURL", "");
+        String plat_ID=currentdetails.getString("platform_ID","");
+        Util.getPlatformInfo(profilesURL, plat_ID, "location", homepage.this, new Util.ResponseCallback() {
+            @Override
+            public void onRespSuccess(String result) throws JSONException {
+                WeatherReq(apiurl,result);
+            }
+
+            @Override
+            public void onRespError(String result) {
+                Toast.makeText(homepage.this,result,Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+    }
+
+
+
+
 }

@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 
 public class MainActivity2 extends AppCompatActivity {
     private WebView webView;
+    private static final String desktop_mode = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -29,14 +30,15 @@ public class MainActivity2 extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
         webView=(WebView) findViewById(R.id.webview);
         webView.setWebViewClient(new WebViewClient());
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        WebView wv = (WebView) findViewById(R.id.webview);
-        WebSettings ws = wv.getSettings();
+        WebSettings ws = webView.getSettings();
+        ws.setJavaScriptEnabled(true);
+        //Choose Mobile/Desktop client.
+        //ws.setUserAgentString(desktop_mode);
 
         ws.setJavaScriptEnabled(true);
         ws.setAllowFileAccess(true);
         String TAG="html5";
+
 
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.ECLAIR) {
             try {
@@ -73,6 +75,7 @@ public class MainActivity2 extends AppCompatActivity {
         }
         String html = "<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\" src=\"http://192.168.1.130:3000/d-solo/MP-A00003room_X2/mp-a00003_room_x2?orgId=1&from=1618686844493&to=1618776844493&panelId=10\" ></iframe>";
         //webView.loadData(html, "text/html", null);
+
         webView.loadUrl("http://192.168.1.130:3000/d/MP-A00003room_X2/mp-a00003_room_x2?orgId=1&from=now-24h&to=now%2B2h");
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottomNavigationView_graph);

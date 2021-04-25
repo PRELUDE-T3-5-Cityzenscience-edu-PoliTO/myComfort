@@ -11,6 +11,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.example.monitoringplatform.ui.login.login;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -216,6 +217,94 @@ public class Util {
         }
 
     }
+    public static void putElement(Context context, String api,String operation, String extraParameter, JSONObject obj,final PutCallback responseCallback) throws JSONException {
+        String final_uri=operation+extraParameter;
+        String final_url = Util.setURL(api, final_uri);
+        JsonObjectRequest JSONreq = new JsonObjectRequest(Request.Method.PUT, final_url,obj,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        if (responseCallback != null) {
+                            try {
+                                responseCallback.onResponseSuccess(response);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Toast.makeText(login.this, "Connection failed.", Toast.LENGTH_SHORT).show();
+                if (responseCallback != null) {
+                    responseCallback.onResponseError(error.toString());
+                }
+            }
+        });
+        AppSingleton.getInstance(context).addToRequestQueue(JSONreq);
+
+
+    }
+    public static void deleteElement(Context context, String api,String operation, String extraParameter, final DeleteCallback responseCallback) throws JSONException {
+        String final_uri=operation+extraParameter;
+        String final_url = Util.setURL(api, final_uri);
+        JsonObjectRequest JSONreq = new JsonObjectRequest(Request.Method.DELETE, final_url,null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        if (responseCallback != null) {
+                            try {
+                                responseCallback.onRespSuccess(response);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Toast.makeText(login.this, "Connection failed.", Toast.LENGTH_SHORT).show();
+                if (responseCallback != null) {
+                    responseCallback.onRespError(error.toString());
+                }
+            }
+        });
+        AppSingleton.getInstance(context).addToRequestQueue(JSONreq);
+
+
+    }
+    public static void weatherReq(Context context, String url,String location,String APIKEY, final WeatherCallback responseCallback) {
+        String cityQuery="?q="+location;
+        String idQuery="&appid="+APIKEY;
+        String metrics="&units=metric";
+        JsonObjectRequest JSONreq = new JsonObjectRequest(Request.Method.GET, url+cityQuery+idQuery+metrics,null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        if (responseCallback != null) {
+                            try {
+                                responseCallback.onRespSuccess(response);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Toast.makeText(login.this, "Connection failed.", Toast.LENGTH_SHORT).show();
+                if (responseCallback != null) {
+                    responseCallback.onRespError(error.toString());
+                }
+            }
+        });
+        AppSingleton.getInstance(context).addToRequestQueue(JSONreq);
+
+    }
+
     public interface LoginCallback {
 
         void onLoginSuccess(JSONObject result);
@@ -243,6 +332,28 @@ public class Util {
         void onRespError(String result);
 
     }
+    public interface PutCallback {
+
+        void onResponseSuccess(JSONObject result) throws JSONException;
+
+        void onResponseError(String result);
+
+    }
+    public interface WeatherCallback {
+
+        void onRespSuccess(JSONObject result) throws JSONException;
+
+        void onRespError(String result);
+
+    }
+    public interface DeleteCallback {
+
+        void onRespSuccess(JSONObject result) throws JSONException;
+
+        void onRespError(String result);
+
+    }
+
 
 
 }

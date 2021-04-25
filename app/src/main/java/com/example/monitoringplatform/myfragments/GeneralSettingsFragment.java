@@ -1,4 +1,4 @@
-package com.example.monitoringplatform;
+package com.example.monitoringplatform.myfragments;
 
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
@@ -16,6 +16,8 @@ import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreferenceCompat;
 
 
+import com.example.monitoringplatform.R;
+import com.example.monitoringplatform.reminder;
 import com.google.gson.Gson;
 
 import java.util.Calendar;
@@ -62,7 +64,7 @@ public class GeneralSettingsFragment extends PreferenceFragmentCompat implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        Intent intent = new Intent(getActivity(),reminder.class);
+        Intent intent = new Intent(getActivity(), reminder.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(),0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alertManager= (AlarmManager) getContext().getSystemService(ALARM_SERVICE);
         boolean parameter_value=prefs.getBoolean(key,false);

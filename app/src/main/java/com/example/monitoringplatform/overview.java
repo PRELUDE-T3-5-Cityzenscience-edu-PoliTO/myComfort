@@ -12,9 +12,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.application.recyclerviewproject.roomOverview_item;
+import com.example.monitoringplatform.adapters.roomOverviewAdapter;
+import com.example.monitoringplatform.preferences.notification;
+import com.example.monitoringplatform.preferences.profile_settings;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -39,6 +44,7 @@ public class overview extends AppCompatActivity {
     private List<String> rooms= new ArrayList<>();
     private static DecimalFormat df = new DecimalFormat("0.00");
     private Map<String, String> rooms_dict = new HashMap<String, String>();
+    private TextView nodata;
     int myFlag=3;
 
     @Override
@@ -47,11 +53,11 @@ public class overview extends AppCompatActivity {
         setContentView(R.layout.activity_overview);
         SharedPreferences currentdetails = getSharedPreferences("currentdetails", MODE_PRIVATE);
         String title=currentdetails.getString("platform_name","");
-        createDict();
         setTitle(title);
-        retrieveRoomsList();
+        onRestart();
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        nodata=findViewById(R.id.NoData);
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.refreshLayoutOverview);
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottomNavigationView);
@@ -92,20 +98,10 @@ public class overview extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        retrieveRoomsList();
+        checkRoomInfo();
 
     }
-    public void createDict(){
-        SharedPreferences userdetails = overview.this.getSharedPreferences("userdetails", MODE_PRIVATE);
-        Gson gsonDict = new Gson();
-        String jsonDict = userdetails.getString("rooms_dict", "");
-        Type typeDict = new TypeToken<Map<String,String>>() {
-        }.getType();
-        Map<String,String> rooms_dict_old = gsonDict.fromJson(jsonDict, typeDict);
-        for (Map.Entry<String, String> entry : rooms_dict_old.entrySet()) {
-            rooms_dict.put(entry.getValue(),entry.getKey());
-        }
-    }
+
     public void openRoomOverview(int position){
         String room_name = rList.get(position).getRoom();
         String room_ID = null;
@@ -193,6 +189,65 @@ public class overview extends AppCompatActivity {
         }
 
 
+    }
+    public void checkRoomInfo(){
+        SharedPreferences currentdetails = overview.this.getSharedPreferences("currentdetails", Context.MODE_PRIVATE);
+        platform_ID = currentdetails.getString("platform_ID", "");
+        SharedPreferences userdetails = overview.this.getSharedPreferences("userdetails", MODE_PRIVATE);
+        String profilesURL=userdetails.getString("profilesURL","");
+        Util.getPlatformInfo(profilesURL, platform_ID, "preferences", overview.this, new Util.ResponseCallback() {
+            @Override
+            public void onRespSuccess(String result) throws JSONException {
+                List<String> roomsList = new ArrayList<>();
+                List<String> rooms_nameList = new ArrayList<>();
+                JSONArray array = new JSONArray(result);
+                Map<String, String> map = new HashMap<String, String>();
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject object = array.getJSONObject(i);
+                    roomsList.add(object.getString("room_ID"));
+                    rooms_nameList.add(object.getString("room_name"));
+                    map.put(object.getString("room_name"),object.getString("room_ID"));
+                }
+                SharedPreferences.Editor editor = userdetails.edit();
+                Gson gson_out= new Gson();
+                String json_out= gson_out.toJson(roomsList);
+                editor.putString("rooms_ID", json_out);
+                editor.commit();
+                Gson gson_out2= new Gson();
+                String json_out2= gson_out2.toJson(rooms_nameList);
+                editor.putString("rooms_name", json_out2);
+                editor.commit();
+                Gson gson_out3= new Gson();
+                String json_out3= gson_out3.toJson(map);
+                editor.putString("rooms_dict", json_out3);
+                editor.commit();
+                createDict();
+                retrieveRoomsList();
+            }
+
+            @Override
+            public void onRespError(String result) {
+                Toast.makeText(overview.this,result,Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+    public void createDict(){
+        SharedPreferences userdetails = overview.this.getSharedPreferences("userdetails", MODE_PRIVATE);
+        Gson gsonDict = new Gson();
+        String jsonDict = userdetails.getString("rooms_dict", "");
+        Type typeDict = new TypeToken<Map<String,String>>() {
+        }.getType();
+        Map<String,String> rooms_dict_old = gsonDict.fromJson(jsonDict, typeDict);
+        for (Map.Entry<String, String> entry : rooms_dict_old.entrySet()) {
+            rooms_dict.put(entry.getValue(),entry.getKey());
+        }
+        Gson gson_out= new Gson();
+        String json_out= gson_out.toJson(rooms_dict);
+        SharedPreferences.Editor editor = userdetails.edit();
+        editor.putString("rooms_dict_ID", json_out);
+        editor.commit();
     }
     public static String computePMV(Float pmv){
         if(pmv>=-0.5 && pmv<=0.5){
@@ -282,7 +337,8 @@ public class overview extends AppCompatActivity {
 
             @Override
             public void onRespError(String result) {
-                Toast.makeText(overview.this,result,Toast.LENGTH_SHORT).show();
+                nodata.setVisibility(View.VISIBLE);
+                //Toast.makeText(overview.this,result,Toast.LENGTH_SHORT).show();
 
             }
         });

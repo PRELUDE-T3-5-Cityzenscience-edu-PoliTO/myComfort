@@ -37,4 +37,10 @@
     <string name="image">image</string>
     <string name="settings">General Settings</string>
     <string name="notification">Feedback notifications</string>
+    <string name="new_platform">New Platform</string>
+    <string name="new_platform_description">Enter your platform ID</string>
+    <string name="platformIDerror"><u>Platform ID not valid.</u></string>
+    <string name="existingErr"><u>Already registered!</u></string>
+    <string name="new_name_description">Enter platform name</string>
+    <string name="new_location_description">Enter your location</string>
 </resources>

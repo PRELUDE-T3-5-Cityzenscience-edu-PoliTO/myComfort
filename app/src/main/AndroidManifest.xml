@@ -12,19 +12,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MonitoringPlatform"
         android:usesCleartextTraffic="true">
-        <activity android:name=".complete_overview"></activity>
+        <activity android:name=".add_platform.new_platform_form_location"></activity>
+        <activity android:name=".add_platform.new_platform_form" />
+        <activity android:name=".add_platform.new_platform" />
+        <activity android:name=".complete_overview" />
         <activity android:name=".tips" />
-        <activity android:name=".notification" />
+        <activity android:name=".preferences.notification" />
         <activity android:name=".network" />
         <activity android:name=".my_platforms" />
-        <activity android:name=".rooms_settings" />
-        <activity android:name=".rooms_devices" />
-        <activity android:name=".profile_settings" />
+        <activity android:name=".preferences.rooms_settings" />
+        <activity android:name=".preferences.rooms_devices" />
+        <activity android:name=".preferences.profile_settings" />
         <activity android:name=".overview" />
         <activity android:name=".homepage" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".MainActivity2"
-            android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".MainActivity2"
+            android:theme="@style/AppTheme" />
         <activity android:name=".ui.login.login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

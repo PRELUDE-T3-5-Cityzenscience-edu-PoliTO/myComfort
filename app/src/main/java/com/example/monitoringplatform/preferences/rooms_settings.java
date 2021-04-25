@@ -1,26 +1,22 @@
-package com.example.monitoringplatform;
+package com.example.monitoringplatform.preferences;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.EditTextPreference;
-import androidx.preference.Preference;
-import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.example.application.recyclerviewproject.room_item;
+import com.example.monitoringplatform.R;
+import com.example.monitoringplatform.Util;
+import com.example.monitoringplatform.adapters.roomAdapter;
+import com.example.monitoringplatform.myfragments.RoomsSettingsFragment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -47,11 +43,22 @@ public class rooms_settings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rooms_settings);
         setTitle("Rooms setting");
-        retrieveRoomsList();
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        retrieveRoomsList();
+
+    }
+    public void removeItem(int position){
+        rList.remove(position);
+        mAdapter.notifyItemRemoved(position);
+    }
+
     public void openRoomSettings(int position){
         String room_ID = rList.get(position).getText2();
         String room_name = rList.get(position).getText1();
@@ -79,7 +86,79 @@ public class rooms_settings extends AppCompatActivity {
                 openRoomSettings(position);
 
             }
+
+            @Override
+            public void onDeleteClick(int position) {
+                deleteDialog(position);
+            }
         });
+
+    }
+    public void deleteDialog(int position){
+        String room_ID = rList.get(position).getText2();
+        String room_name = rList.get(position).getText1();
+        AlertDialog.Builder builder = new AlertDialog.Builder(rooms_settings.this,R.style.MyAlertDialog);
+        builder.setTitle("Delete Room").
+                setMessage("Are you sure you want to delete "+room_name+"?");
+        builder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        SharedPreferences userdetails = rooms_settings.this.getSharedPreferences("userdetails", MODE_PRIVATE);
+                        String profilesURL=userdetails.getString("profilesURL","");
+                        try {
+                            Util.deleteElement(rooms_settings.this, profilesURL, "/removeRoom/", platform_ID+'/'+room_ID, new Util.DeleteCallback() {
+                                @Override
+                                public void onRespSuccess(JSONObject result) throws JSONException {
+                                    if(result.getBoolean("result")){
+                                        removeItem(position);
+                                        Gson gsonDict = new Gson();
+                                        String jsonDict = userdetails.getString("rooms_dict_ID", "");
+                                        Type typeDict = new TypeToken<Map<String, String>>() {
+                                        }.getType();
+                                        Map<String, String> rooms_dict_ID = gsonDict.fromJson(jsonDict, typeDict);
+                                        rooms_dict_ID.remove(room_ID);
+                                        Gson gson_out = new Gson();
+                                        String json_out = gson_out.toJson(rooms_dict_ID);
+
+                                        Gson gsonDict2 = new Gson();
+                                        String jsonDict2 = userdetails.getString("rooms_dict", "");
+                                        Type typeDict2 = new TypeToken<Map<String, String>>() {
+                                        }.getType();
+                                        Map<String, String> rooms_dict = gsonDict2.fromJson(jsonDict2, typeDict2);
+                                        rooms_dict.remove(room_name);
+                                        Gson gson_out2 = new Gson();
+                                        String json_out2 = gson_out2.toJson(rooms_dict);
+
+
+                                        SharedPreferences.Editor editor = userdetails.edit();
+                                        editor.putString("rooms_dict_ID", json_out);
+                                        editor.putString("rooms_dict", json_out);
+                                        editor.apply();
+                                    }
+
+                                }
+
+                                @Override
+                                public void onRespError(String result) {
+                                    Toast.makeText(rooms_settings.this,result,Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+        builder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert11 = builder.create();
+        alert11.show();
+
 
     }
     public void buildRoomsList(){
@@ -135,6 +214,7 @@ public class rooms_settings extends AppCompatActivity {
                 String json_out3= gson_out3.toJson(map);
                 editor.putString("rooms_dict", json_out3);
                 editor.commit();
+                createDict();
                 createList();
             }
 
@@ -145,6 +225,23 @@ public class rooms_settings extends AppCompatActivity {
             }
         });
 
+    }
+    public void createDict(){
+        SharedPreferences userdetails = rooms_settings.this.getSharedPreferences("userdetails", MODE_PRIVATE);
+        Gson gsonDict = new Gson();
+        String jsonDict = userdetails.getString("rooms_dict", "");
+        Type typeDict = new TypeToken<Map<String,String>>() {
+        }.getType();
+        Map<String,String> rooms_dict_old = gsonDict.fromJson(jsonDict, typeDict);
+        Map<String, String> rooms_dict = new HashMap<String, String>();
+        for (Map.Entry<String, String> entry : rooms_dict_old.entrySet()) {
+            rooms_dict.put(entry.getValue(),entry.getKey());
+        }
+        Gson gson_out= new Gson();
+        String json_out= gson_out.toJson(rooms_dict);
+        SharedPreferences.Editor editor = userdetails.edit();
+        editor.putString("rooms_dict_ID", json_out);
+        editor.commit();
     }
 
     @Override

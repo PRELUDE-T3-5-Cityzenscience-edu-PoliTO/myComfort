@@ -1,4 +1,4 @@
-package com.example.monitoringplatform;
+package com.example.monitoringplatform.preferences;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.application.recyclerviewproject.room_item;
+import com.example.monitoringplatform.R;
+import com.example.monitoringplatform.Util;
+import com.example.monitoringplatform.adapters.roomAdapter;
+import com.example.monitoringplatform.network;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -65,6 +69,11 @@ public class rooms_devices extends AppCompatActivity {
             @Override
             public void onItemClick(int position) {
                 openMyNetwork(position);
+
+            }
+
+            @Override
+            public void onDeleteClick(int position) {
 
             }
         });

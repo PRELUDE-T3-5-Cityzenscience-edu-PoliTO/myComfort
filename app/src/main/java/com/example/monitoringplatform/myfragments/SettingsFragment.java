@@ -1,4 +1,4 @@
-package com.example.monitoringplatform;
+package com.example.monitoringplatform.myfragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +16,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.example.monitoringplatform.R;
+import com.example.monitoringplatform.Util;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -81,22 +83,24 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         if(key.equals("inactive_time")){
             isInt=true;
         }
-        try {
-            Util.postParameter(getContext(),profilesURL,"/","/setParameter/",key, parameter_value,isInt,isFloat,new Util.PostCallback() {
-                @Override
-                public void onRespSuccess(JSONObject result) {
-                    Toast.makeText(getActivity(),"Ok",Toast.LENGTH_SHORT).show();
+        if(!key.equals("name")) {
+            try {
+                Util.postParameter(getContext(), profilesURL, "/", "/setParameter/", key, parameter_value, isInt, isFloat, new Util.PostCallback() {
+                    @Override
+                    public void onRespSuccess(JSONObject result) {
+                        Toast.makeText(getActivity(), "Ok", Toast.LENGTH_SHORT).show();
 
-                }
+                    }
 
-                @Override
-                public void onRespError(String result) {
-                    Toast.makeText(getActivity(),"Can't save settings",Toast.LENGTH_LONG).show();
+                    @Override
+                    public void onRespError(String result) {
+                        Toast.makeText(getActivity(), "Can't save settings", Toast.LENGTH_LONG).show();
 
-                }
-            });
-        } catch (JSONException e) {
-            e.printStackTrace();
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -115,23 +119,25 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
         for (int i = 0; i < profileSettings.size(); i++) {
             int finalI = i;
-            Util.getPlatformInfo(profilesURL, platform_ID, profileSettings.get(i), getActivity(), new Util.ResponseCallback() {
+            if(!profileSettings.get(i).equals("name")) {
+                Util.getPlatformInfo(profilesURL, platform_ID, profileSettings.get(i), getActivity(), new Util.ResponseCallback() {
 
-                @Override
-                public void onRespSuccess(String result) {
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString(profileSettings.get(finalI),result);
-                    editor.apply();
-                    createPref(rootKey);
+                    @Override
+                    public void onRespSuccess(String result) {
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString(profileSettings.get(finalI), result);
+                        editor.apply();
+                        createPref(rootKey);
 
-                }
+                    }
 
-                @Override
-                public void onRespError(String result) {
-                    Toast.makeText(getActivity(),result,Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onRespError(String result) {
+                        Toast.makeText(getActivity(), profileSettings.get(finalI), Toast.LENGTH_SHORT).show();
 
-                }
-            });
+                    }
+                });
+            }
 
         }
 

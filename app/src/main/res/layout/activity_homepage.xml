@@ -81,6 +81,82 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cardViewWeather"
+                        android:layout_width="191dp"
+                        android:layout_height="65dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="32dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.086">
+
+
+                        <TextView
+                            android:id="@+id/city"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="20dp"
+                            android:text="Turin"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="@id/cardViewWeather"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/conditionImage"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:adjustViewBounds="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/city"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="1.0" />
+
+                        <TextView
+                            android:id="@+id/temperature_valueExt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="1dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="5dp"
+                            android:gravity="center"
+                            android:textSize="11sp"
+                            app:layout_constraintEnd_toStartOf="@id/humidity_valueExt"
+                            app:layout_constraintTop_toBottomOf="@+id/city" />
+
+
+                        <TextView
+                            android:id="@+id/humidity_valueExt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="1dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="5dp"
+                            android:gravity="center"
+                            android:textSize="11sp"
+                            app:layout_constraintEnd_toStartOf="@id/wind_valueExt"
+                            app:layout_constraintTop_toBottomOf="@+id/city" />
+
+
+                        <TextView
+                            android:id="@+id/wind_valueExt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="1dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="16dp"
+                            android:gravity="center"
+                            android:textSize="11sp"
+                            app:layout_constraintEnd_toEndOf="@id/cardViewWeather"
+                            app:layout_constraintTop_toBottomOf="@+id/city" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
                     <TextView
                         android:id="@+id/textView2"
                         android:layout_width="wrap_content"
@@ -128,19 +204,7 @@
                         app:layout_constraintBottom_toBottomOf="@+id/myplatforms"
                         app:layout_constraintStart_toEndOf="@+id/myplatforms" />
 
-                    <ImageView
-                        android:id="@+id/profileB"
-                        android:layout_width="51dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:layout_marginBottom="32dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:padding="1dp"
-                        android:src="@drawable/ic_profile"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.228" />
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

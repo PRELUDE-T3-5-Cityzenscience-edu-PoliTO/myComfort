@@ -3,12 +3,14 @@ package com.example.monitoringplatform;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -18,26 +20,31 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.application.recyclerviewproject.parameter_item;
-import com.example.application.recyclerviewproject.roomOverview_item;
-import com.example.monitoringplatform.R;
+import com.example.monitoringplatform.adapters.parameterAdapter;
+import com.example.monitoringplatform.preferences.rooms_settings;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Map;
 
 
-public class complete_overview extends AppCompatActivity {
+public class complete_overview extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     private RecyclerView mRecyclerView;
     private parameterAdapter mAdapter;
     private ArrayList<parameter_item> rList = new ArrayList<>();
@@ -51,6 +58,7 @@ public class complete_overview extends AppCompatActivity {
     private TextView PPD_value;
     private TextView PMV_text;
     private ImageView PMV_image;
+    private TextView title_room;
     private static DecimalFormat df = new DecimalFormat("0.00");
 
     @Override
@@ -58,10 +66,11 @@ public class complete_overview extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complete_overview);
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.refreshLayoutOverviewRoom);
-        TextView title_room= findViewById(R.id.myroom);
+        title_room= findViewById(R.id.myroom);
         setTitle("My Overview");
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        ImageButton feedbackB = (ImageButton) findViewById(R.id.feedbackB);
         clothing_value= findViewById(R.id.clovalue);
         met_value= findViewById(R.id.metvalue);
         PMV_value= findViewById(R.id.PMVvalue);
@@ -70,12 +79,10 @@ public class complete_overview extends AppCompatActivity {
         PMV_image=findViewById(R.id.PMVstatus);
 
         SharedPreferences currentdetails = complete_overview.this.getSharedPreferences("currentdetails", Context.MODE_PRIVATE);
-        room_name = currentdetails.getString("room_name", "");
         room_ID = currentdetails.getString("room_ID", "");
         platform_ID = currentdetails.getString("platform_ID", "");
+        updateName();
         getInfo();
-
-        title_room.setText(room_name);
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -109,10 +116,38 @@ public class complete_overview extends AppCompatActivity {
                         return false;
                     }
                 });
+        feedbackB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFeedbackMenu(v);
+            }
+        });
 
 
 
     }
+    public void updateName(){
+        SharedPreferences userdetails = complete_overview.this.getSharedPreferences("userdetails", Context.MODE_PRIVATE);
+        Gson gsonDict = new Gson();
+        String jsonDict = userdetails.getString("rooms_dict_ID", "");
+        Type typeDict = new TypeToken<Map<String,String>>() {
+        }.getType();
+        Map<String,String> rooms_dict = gsonDict.fromJson(jsonDict, typeDict);
+        for (Map.Entry<String, String> entry : rooms_dict.entrySet()) {
+            if(entry.getKey().equals(room_ID)){
+                room_name=entry.getValue();
+                title_room.setText(room_name);
+                break;
+            }
+        }
+    }
+    public void showFeedbackMenu(View v){
+        PopupMenu popupMenu= new PopupMenu(this,v);
+        popupMenu.setOnMenuItemClickListener(this);
+        popupMenu.inflate(R.menu.popup_menu_f);
+        popupMenu.show();
+    }
+
     public void startView(){
         mRecyclerView=findViewById(R.id.parameter_view);
         mRecyclerView.setHasFixedSize(true);
@@ -131,6 +166,7 @@ public class complete_overview extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+        updateName();
         rList.clear();
         getInfo();
 
@@ -278,4 +314,65 @@ public class complete_overview extends AppCompatActivity {
         return true;
     }
 
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.info_feedback:
+                Toast.makeText(this, "It should be implemented", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.feedback2:
+                feedbackDialog(room_ID);
+                return true;
+
+
+            default:
+                return false;
+        }
+    }
+    public void feedbackDialog(String myroom){
+        /*
+        Dialog d=new Dialog(this);
+        d.setTitle("My Feedback");
+        d.setCancelable(false);
+        d.setContentView(R.layout.dialog);
+        d.show();
+         */
+
+        String[] comfort = {"Too cold","Cold", "Ok", "Hot","Too hot"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.MyFeedbackDialog);
+        builder.setTitle("My Feedback");
+        builder.setItems(comfort, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(complete_overview.this,"Feedback sent.",Toast.LENGTH_SHORT).show();
+                String myfeedback=comfort[which];
+                try {
+                    sendFeedback(myroom,myfeedback);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        builder.show();
+    }
+    public void sendFeedback(String myroom,String myfeedback) throws JSONException {
+        SharedPreferences userdetails = getSharedPreferences("userdetails", MODE_PRIVATE);
+        String feedbackURL=userdetails.getString("feedbackURL","");
+        Util.putParameter(complete_overview.this,feedbackURL,"/"+myroom,"/newFeedback/","feedback", myfeedback.toLowerCase(),false,false,new Util.PostCallback() {
+            @Override
+            public void onRespSuccess(JSONObject result) {
+                Toast.makeText(complete_overview.this,"Ok",Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onRespError(String result) {
+                Toast.makeText(complete_overview.this,"Can't save settings",Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+
+    }
 }

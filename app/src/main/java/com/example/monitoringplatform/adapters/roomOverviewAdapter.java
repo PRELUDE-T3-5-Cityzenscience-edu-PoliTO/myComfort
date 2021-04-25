@@ -1,4 +1,4 @@
-package com.example.monitoringplatform;
+package com.example.monitoringplatform.adapters;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.application.recyclerviewproject.roomOverview_item;
-import com.example.application.recyclerviewproject.room_item;
+import com.example.monitoringplatform.R;
 
 import java.util.ArrayList;
 

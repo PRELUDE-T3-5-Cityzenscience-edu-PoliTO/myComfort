@@ -1,4 +1,4 @@
-package com.example.monitoringplatform;
+package com.example.monitoringplatform.myfragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +16,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.example.monitoringplatform.R;
+import com.example.monitoringplatform.Util;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -83,6 +85,16 @@ public class RoomsSettingsFragment extends PreferenceFragmentCompat implements S
         }
 
     }
+    public static boolean containsWhiteSpace( String testCode){
+        if(testCode != null){
+            for(int i = 0; i < testCode.length(); i++){
+                if(Character.isWhitespace(testCode.charAt(i))){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public void postUp(String key) throws JSONException {
         boolean isFloat=false;
         boolean isInt=false;
@@ -94,8 +106,27 @@ public class RoomsSettingsFragment extends PreferenceFragmentCompat implements S
         SharedPreferences currentdetails = this.getActivity().getSharedPreferences("currentdetails", Context.MODE_PRIVATE);
         String room_ID = currentdetails.getString("room_ID", "");
         if(key.equals("room_name")){
+            if(containsWhiteSpace(parameter_value)){
+                Toast.makeText(getActivity(),"Spaces are not allowed.",Toast.LENGTH_SHORT).show();
+            }
+            Gson gsonDict = new Gson();
+            String jsonDict = userdetails.getString("rooms_dict_ID", "");
+            Type typeDict = new TypeToken<Map<String,String>>() {
+            }.getType();
+            Map<String,String> rooms_dict = gsonDict.fromJson(jsonDict, typeDict);
+            for (Map.Entry<String, String> entry : rooms_dict.entrySet()) {
+                if(entry.getKey().equals(room_ID)){
+                    entry.setValue(parameter_value);
+                    Gson gson_out= new Gson();
+                    String json_out= gson_out.toJson(rooms_dict);
+                    SharedPreferences.Editor editor = userdetails.edit();
+                    editor.putString("rooms_dict_ID", json_out);
+                    editor.commit();
+                    break;
+                }
+            }
             try {
-                Util.postParameter(getContext(),profilesURL,"/"+room_ID,"/setRoomParameter/",key, parameter_value,false,false,new Util.PostCallback() {
+                Util.postParameter(getContext(),profilesURL,"/"+room_ID,"/setRoomParameter/",key, parameter_value.replace(" ",""),false,false,new Util.PostCallback() {
                     @Override
                     public void onRespSuccess(JSONObject result) {
                         Toast.makeText(getActivity(),"Ok",Toast.LENGTH_SHORT).show();
