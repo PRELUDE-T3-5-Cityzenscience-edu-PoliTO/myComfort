@@ -56,6 +56,7 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     TextView humExt;
     TextView windExt;
     TextView locationText;
+    private String apiURL="https://api.openweathermap.org/data/2.5/weather";
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -281,6 +282,7 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                 String current_Name=platforms_nameList.get(position);
                 Util.saveData(homepage.this,"currentdetails","platform_ID",current_ID);
                 Util.saveData(homepage.this,"currentdetails","platform_name",current_Name);
+                updateLocation(apiURL);
                 /*
                 if(Firstflag>1){
 
@@ -518,7 +520,6 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
 
     }
     public void getWeather(){
-        String apiURL="https://api.openweathermap.org/data/2.5/weather";
         try {
             APIKEY = Util.getProperty("apiKEY",homepage.this);
         } catch (IOException e) {
