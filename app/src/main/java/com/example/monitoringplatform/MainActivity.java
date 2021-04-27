@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         Button dashboard_button=findViewById(R.id.dashboard);
         dashboard_button.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Intent intent=new Intent(MainActivity.this, MainActivity2.class);
+                Intent intent=new Intent(MainActivity.this, my_graphs.class);
                 startActivity(intent);
 
             }

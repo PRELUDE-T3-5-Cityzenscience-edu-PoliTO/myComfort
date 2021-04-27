@@ -111,7 +111,8 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         myGraphs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(homepage.this, MainActivity2.class);
+                Intent intent=new Intent(homepage.this, my_graphs.class);
+                intent.putExtra("isHome", true);
                 //Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse("http://192.168.1.130:3000/d-solo/MP-A00003room_X2/mp-a00003_room_x2?orgId=1&from=1618686844493&to=1618776844493&panelId=10"));
                 //startActivity(browserIntent);
                 startActivity(intent);

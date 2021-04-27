@@ -48,7 +48,6 @@ public class login extends AppCompatActivity {
     private String clientsURL;
     private String profilesURI=null;
     private String profilesURL;
-    private String APIKEY;
     private String user_ID;
     private List<String> platforms= new ArrayList<>();
     private String inputName;

@@ -104,8 +104,9 @@ public class complete_overview extends AppCompatActivity implements PopupMenu.On
                                 startActivity(intent_settings);
                                 break;
                             case R.id.graph:
-                                Intent intent_tips=new Intent(complete_overview.this, MainActivity2.class);
-                                startActivity(intent_tips);
+                                Intent intent_graphs=new Intent(complete_overview.this, my_graphs.class);
+                                intent_graphs.putExtra("isHome", false);
+                                startActivity(intent_graphs);
                                 break;
                             case R.id.network:
                                 Intent intent_network=new Intent(complete_overview.this, network.class);
