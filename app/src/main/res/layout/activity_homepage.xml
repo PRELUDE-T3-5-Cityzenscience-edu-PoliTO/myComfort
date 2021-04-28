@@ -100,7 +100,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="20dp"
-                            android:text="Turin"
+                            android:text="No City"
                             android:textAllCaps="true"
                             android:textColor="@color/colorPrimary"
                             android:textSize="13sp"

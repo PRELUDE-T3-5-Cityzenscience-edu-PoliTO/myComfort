@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,7 @@ public class overview extends AppCompatActivity {
     private static DecimalFormat df = new DecimalFormat("0.00");
     private Map<String, String> rooms_dict = new HashMap<String, String>();
     private TextView nodata;
+    private ProgressBar loadingProgressBar;
     int myFlag=3;
 
     @Override
@@ -54,6 +56,8 @@ public class overview extends AppCompatActivity {
         SharedPreferences currentdetails = getSharedPreferences("currentdetails", MODE_PRIVATE);
         String title=currentdetails.getString("platform_name","");
         setTitle(title);
+        loadingProgressBar= findViewById(R.id.loading2);
+        loadingProgressBar.setVisibility(View.GONE);
         onRestart();
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -98,6 +102,7 @@ public class overview extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+        loadingProgressBar.setVisibility(View.VISIBLE);
         checkRoomInfo();
 
     }
@@ -136,6 +141,7 @@ public class overview extends AppCompatActivity {
 
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
+        loadingProgressBar.setVisibility(View.GONE);
         mAdapter.setOnItemClickListener(new roomOverviewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -272,8 +278,10 @@ public class overview extends AppCompatActivity {
         SharedPreferences userdetails = overview.this.getSharedPreferences("userdetails", MODE_PRIVATE);
         String serverURL=userdetails.getString("serverURL","");
         Util.getPlatformInfo(serverURL, platform_ID, "rooms", overview.this, new Util.ResponseCallback() {
+
             @Override
             public void onRespSuccess(String result) throws JSONException {
+                nodata.setVisibility(View.GONE);
                 JSONArray array = new JSONArray( result.replace("/","."));
                 for (int i = 0; i < array.length(); i++) {
                     JSONArray resultList = new JSONArray();

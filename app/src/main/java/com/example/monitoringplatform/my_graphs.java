@@ -6,10 +6,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.HttpAuthHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,6 +32,7 @@ public class my_graphs extends AppCompatActivity {
     private String grafanaURI;
     private String apiURL;
     private boolean isHome;
+    private TextView nodata;
     private static final String desktop_mode = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,7 @@ public class my_graphs extends AppCompatActivity {
         if(extras.containsKey("isHome")) {
             isHome=i.getBooleanExtra("isHome",true);
         }
+        nodata=findViewById(R.id.NoDataGraphs);
         webView=(WebView) findViewById(R.id.webview);
         webView.setWebViewClient(new WebViewClient());
         WebSettings ws = webView.getSettings();
@@ -107,6 +111,7 @@ public class my_graphs extends AppCompatActivity {
                         public void onRespSuccess(String result) throws JSONException {
                             if (savedInstanceState == null)
                             {
+                                nodata.setVisibility(View.GONE);
                                 webView.loadUrl(result);
                             }
 
@@ -115,6 +120,7 @@ public class my_graphs extends AppCompatActivity {
 
                         @Override
                         public void onRespError(String result) {
+                            nodata.setVisibility(View.VISIBLE);
 
                         }
                     });
@@ -140,9 +146,10 @@ public class my_graphs extends AppCompatActivity {
                     Util.getRoomInfo(grafanaURL,"dashboard",platform_ID,room_ID,my_graphs.this, new Util.ResponseCallback() {
                         @Override
                         public void onRespSuccess(String result) throws JSONException {
-                            //http://MP-A00003:MP-A00003@192.168.1.130:3000/d/MP-A00003room_X2/cameretta?orgId=46
+
                             if (savedInstanceState == null)
                             {
+                                nodata.setVisibility(View.GONE);
                                 webView.loadUrl(result);
                             }
 
@@ -151,6 +158,7 @@ public class my_graphs extends AppCompatActivity {
 
                         @Override
                         public void onRespError(String result) {
+                            nodata.setVisibility(View.VISIBLE);
 
                         }
                     });

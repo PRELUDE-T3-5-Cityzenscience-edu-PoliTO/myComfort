@@ -46,8 +46,8 @@ public class Util {
         String output=url+uri;
         return output;
     }
-    public static String buildURL(String IP, String port, String service){
-        String URL= "http://"+IP+ ":"+port + service;
+    public static String buildURL(String IP,String service){
+        String URL= IP + service;
         return URL;
     }
     public static void getPlatformInfo(String api, String uri, String key, Context context, final ResponseCallback responseCallback){
@@ -107,22 +107,20 @@ public class Util {
 
     }
     public static void getService(Context context, String api, String uri, String new_service, final Util.ServiceCallback serviceCallback){
-        String final_url = Util.setURL(api, uri);
+        String final_url = Util.setURL(api+"/public", uri);
         JsonObjectRequest JSONreq = new JsonObjectRequest(Request.Method.GET, final_url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         String ip = null;
-                        String port = null;
                         String service = null;
                         try {
                             ip = response.getString("IP_address");
-                            port = String.valueOf(response.getInt("port"));
                             service = response.getString("service");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        String URL = Util.buildURL(ip, port, service);
+                        String URL = Util.buildURL(ip, service);
                         Util.saveData(context,"userdetails",new_service,URL);
                         if (serviceCallback != null) {
                             serviceCallback.onReqSuccess(response);

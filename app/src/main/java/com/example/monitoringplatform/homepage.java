@@ -281,9 +281,13 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                 }
                 String current_ID=platformsList.get(position);
                 String current_Name=platforms_nameList.get(position);
+                SharedPreferences currentdetails = homepage.this.getSharedPreferences("currentdetails", Context.MODE_PRIVATE);
+                String platform_ID = currentdetails.getString("platform_ID", "");
                 Util.saveData(homepage.this,"currentdetails","platform_ID",current_ID);
                 Util.saveData(homepage.this,"currentdetails","platform_name",current_Name);
-                updateLocation(apiURL);
+                if(!platform_ID.equals(current_ID)){
+                    updateLocation(apiURL);
+                }
                 /*
                 if(Firstflag>1){
 
@@ -531,7 +535,15 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         if(location.equals("")) {
             updateLocation(apiURL);
         }else{
-            WeatherReq(apiURL,location);
+            SharedPreferences userdetails = homepage.this.getSharedPreferences("userdetails", MODE_PRIVATE);
+            long last_req=userdetails.getLong("weather_req_time",System.currentTimeMillis()-5600000);
+            if (Math.abs(last_req-System.currentTimeMillis())>3600000){
+                //server timestamp is within 60 minutes of current system time
+                WeatherReq(apiURL,location);
+
+            } else {
+                //server is not within 5 minutes of current system time
+            }
         }
 
 
@@ -540,6 +552,11 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         Util.weatherReq(homepage.this, apiURL, location, APIKEY, new Util.WeatherCallback() {
             @Override
             public void onRespSuccess(JSONObject result) throws JSONException {
+                //Toast.makeText(homepage.this,"fatto",Toast.LENGTH_SHORT).show();
+                SharedPreferences userdetails = homepage.this.getSharedPreferences("userdetails", MODE_PRIVATE);
+                SharedPreferences.Editor editor=userdetails.edit();
+                editor.putLong("weather_req_time",System.currentTimeMillis());
+                editor.commit();
                 parseCondition(result,location);
 
             }
@@ -580,11 +597,16 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     public void updateLocation(String apiurl){
         SharedPreferences userdetails = getSharedPreferences("userdetails", MODE_PRIVATE);
         SharedPreferences currentdetails = getSharedPreferences("currentdetails", MODE_PRIVATE);
+
         String profilesURL = userdetails.getString("profilesURL", "");
         String plat_ID=currentdetails.getString("platform_ID","");
         Util.getPlatformInfo(profilesURL, plat_ID, "location", homepage.this, new Util.ResponseCallback() {
             @Override
             public void onRespSuccess(String result) throws JSONException {
+                SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(homepage.this);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("location",result);
+                editor.commit();
                 WeatherReq(apiurl,result);
             }
 
