@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -25,6 +26,7 @@ import com.example.monitoringplatform.AppSingleton;
 import com.example.monitoringplatform.R;
 import com.example.monitoringplatform.Util;
 import com.example.monitoringplatform.homepage;
+import com.example.monitoringplatform.registration;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -72,6 +74,7 @@ public class login extends AppCompatActivity {
 
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
+        final TextView registerText=findViewById(R.id.register);
         final Button loginButton = findViewById(R.id.login);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
         loadingProgressBar.setVisibility(View.GONE);
@@ -85,6 +88,13 @@ public class login extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        registerText.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent intent=new Intent(login.this, registration.class);
+                startActivity(intent);
+
+            }
+        });
         loginButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -309,6 +319,7 @@ public class login extends AppCompatActivity {
         };
         AppSingleton.getInstance(login.this).addToRequestQueue(JSONreq);
     }
+
 
 
 }

@@ -45,4 +45,5 @@
     <string name="new_location_description">Enter your location</string>
     <string name="new_room">New Room</string>
     <string name="new_room_description">Enter room name</string>
+    <string name="register"><u>Click here to register.</u></string>
 </resources>

@@ -284,6 +284,7 @@ public class overview extends AppCompatActivity {
                 nodata.setVisibility(View.GONE);
                 JSONArray array = new JSONArray( result.replace("/","."));
                 for (int i = 0; i < array.length(); i++) {
+
                     JSONArray resultList = new JSONArray();
                     JSONObject object = array.getJSONObject(i);
                     String room_ID=object.getString("room_ID");

@@ -2,6 +2,7 @@ package com.example.monitoringplatform.add_platform;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,6 +23,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.monitoringplatform.AppSingleton;
 import com.example.monitoringplatform.R;
 import com.example.monitoringplatform.Util;
+import com.example.monitoringplatform.add_room.new_room_form_name;
 import com.example.monitoringplatform.homepage;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -90,7 +92,6 @@ public class new_platform_form_location extends AppCompatActivity {
                     jsonBody.put("platform_name", platform_name);
                     jsonBody.put("location", platform_location);
                     jsonBody.put("inactive_time", 1800);
-                    jsonBody.put("preferences",myList);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -150,7 +151,10 @@ public class new_platform_form_location extends AppCompatActivity {
         });
     }
     public void openNew(){
-        Intent intent=new Intent(getApplicationContext(), homepage.class);
+
+        Intent intent=new Intent(getApplicationContext(), new_room_form_name.class);
+        intent.putExtra("platform_ID",plat_ID);
+        intent.putExtra("platform_name", platform_name);
         startActivity(intent);
         finish();
     }

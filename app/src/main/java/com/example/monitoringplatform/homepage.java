@@ -63,6 +63,7 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+        updateLocation(apiURL);
         onRestart();
         // register all the ImageButtons with their appropriate IDs
         ImageButton backB = (ImageButton) findViewById(R.id.backB);

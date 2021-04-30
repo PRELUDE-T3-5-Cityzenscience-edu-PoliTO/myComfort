@@ -12,6 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MonitoringPlatform"
         android:usesCleartextTraffic="true">
+        <activity android:name=".associate_room.association"></activity>
+        <activity android:name=".registration" />
         <activity android:name=".add_room.new_room_form_name" />
         <activity android:name=".add_platform.new_platform_form_location" />
         <activity android:name=".add_platform.new_platform_form" />
