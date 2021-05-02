@@ -57,6 +57,7 @@ public class mqtt_sub extends Service {
     private MqttConnectOptions createMqttConnectOptions() {
         mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setCleanSession(false);
+        mqttConnectOptions.setAutomaticReconnect(true);
         return mqttConnectOptions;
     }
 
