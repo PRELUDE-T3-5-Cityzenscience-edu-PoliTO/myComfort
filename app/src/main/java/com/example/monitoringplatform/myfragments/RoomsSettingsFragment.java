@@ -98,6 +98,7 @@ public class RoomsSettingsFragment extends PreferenceFragmentCompat implements S
     public void postUp(String key) throws JSONException {
         boolean isFloat=false;
         boolean isInt=false;
+        boolean isBool=false;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String parameter_value=prefs.getString(key,"");
         SharedPreferences userdetails = this.getActivity().getSharedPreferences("userdetails", Context.MODE_PRIVATE);
@@ -126,7 +127,7 @@ public class RoomsSettingsFragment extends PreferenceFragmentCompat implements S
                 }
             }
             try {
-                Util.postParameter(getContext(),profilesURL,"/"+room_ID,"/setRoomParameter/",key, parameter_value.replace(" ",""),false,false,new Util.PostCallback() {
+                Util.postParameter(getContext(),profilesURL,"/"+room_ID,"/setRoomParameter/",key, parameter_value.replace(" ",""),false,false,false,new Util.PostCallback() {
                     @Override
                     public void onRespSuccess(JSONObject result) {
                         Toast.makeText(getActivity(),"Ok",Toast.LENGTH_SHORT).show();
@@ -148,7 +149,7 @@ public class RoomsSettingsFragment extends PreferenceFragmentCompat implements S
                 isFloat = true;
             }
 
-            Util.postParameter(mContext, serverURL, "/" + room_ID, "/setParameter/",key, parameter_value, isInt, isFloat, new Util.PostCallback() {
+            Util.postParameter(mContext, serverURL, "/" + room_ID, "/setParameter/",key, parameter_value, isInt, isFloat, isBool, new Util.PostCallback() {
                 @Override
                 public void onRespSuccess(JSONObject result) {
                     Toast.makeText(mContext, "Ok", Toast.LENGTH_SHORT).show();

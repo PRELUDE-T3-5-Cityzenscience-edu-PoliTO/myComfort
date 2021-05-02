@@ -26,6 +26,7 @@ import com.example.monitoringplatform.AppSingleton;
 import com.example.monitoringplatform.R;
 import com.example.monitoringplatform.Util;
 import com.example.monitoringplatform.homepage;
+import com.example.monitoringplatform.mqtt_sub;
 import com.example.monitoringplatform.registration;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -226,6 +227,7 @@ public class login extends AppCompatActivity {
                                     Util.saveData(login.this,"currentdetails","platform_ID",platforms.get(0));
                                     Intent intent=new Intent(login.this, homepage.class);
                                     startActivity(intent);
+                                    mqtt_sub.createNotificationChannel(login.this);
                                     finish();
                                 }
 

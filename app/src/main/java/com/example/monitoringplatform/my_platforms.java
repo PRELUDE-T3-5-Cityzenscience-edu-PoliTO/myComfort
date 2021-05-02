@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Base64;
 import android.widget.Toast;
@@ -17,6 +18,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.application.recyclerviewproject.platform_item;
 import com.example.monitoringplatform.adapters.platformAdapter;
 import com.google.gson.Gson;
@@ -63,6 +66,7 @@ public class my_platforms extends AppCompatActivity {
         mAdapter.setOnItemClickListener(new platformAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
+                rebootDialog(position);
 
             }
 
@@ -72,6 +76,83 @@ public class my_platforms extends AppCompatActivity {
 
             }
         });
+
+    }
+    public void rebootDialog(int position){
+        String[] result =rList.get(position).getText2().split("\n",2);
+        String plat_ID=result[0];
+        String plat_name = rList.get(position).getText1();
+        SharedPreferences userdetails = getSharedPreferences("userdetails", MODE_PRIVATE);
+        String serverURL=userdetails.getString("serverURL","");
+        Util.getPlatformInfo(serverURL, plat_ID, "local_IP", my_platforms.this, new Util.ResponseCallback() {
+            @Override
+            public void onRespSuccess(String result) throws JSONException {
+                //Toast.makeText(my_platforms.this,result,Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(my_platforms.this);
+                builder.setTitle(plat_name);
+                builder.setMessage("You can reboot or stop your platform if you need...\n" +
+                        "Please, make sure you are in the same local network.");
+
+                // add the buttons
+                builder.setPositiveButton("Reboot", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendCommand(result, "/reboot", new CommandCallback() {
+                            @Override
+                            public void onRespSuccess(JSONObject result) throws JSONException {
+                                Toast.makeText(my_platforms.this,"Rebooting...",Toast.LENGTH_SHORT).show();
+
+
+                            }
+
+                            @Override
+                            public void onRespError(String result) {
+                                Toast.makeText(my_platforms.this,result,Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+
+                    }
+                });
+                builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.setNegativeButton("Power off", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendCommand(result, "/poweroff", new CommandCallback() {
+                            @Override
+                            public void onRespSuccess(JSONObject result) throws JSONException {
+                                //Toast.makeText(my_platforms.this,"Shutdown...",Toast.LENGTH_SHORT).show();
+
+                            }
+
+                            @Override
+                            public void onRespError(String result) {
+                                //Toast.makeText(my_platforms.this,result,Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+                    }
+                });
+
+                // create and show the alert dialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+            }
+
+            @Override
+            public void onRespError(String result) {
+                Toast.makeText(my_platforms.this,result,Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
 
     }
     public void deleteDialog(int position){
@@ -232,9 +313,43 @@ public class my_platforms extends AppCompatActivity {
         };
         AppSingleton.getInstance(my_platforms.this).addToRequestQueue(JSONreq);
     }
+    public void sendCommand(String url,String command, final CommandCallback commandCallback){
+        String final_url=url+command;
+        JsonObjectRequest JSONreq = new JsonObjectRequest(Request.Method.GET, final_url,null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        if (commandCallback != null) {
+                            try {
+                                commandCallback.onRespSuccess(response);
+                            } catch (JSONException e) {
+                                //e.printStackTrace();
+                            }
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Toast.makeText(login.this, "Connection failed.", Toast.LENGTH_SHORT).show();
+                if (commandCallback != null) {
+                    commandCallback.onRespError(error.toString());
+                }
+            }
+        });
+        AppSingleton.getInstance(my_platforms.this).addToRequestQueue(JSONreq);
+
+    }
     @Override
     public boolean onSupportNavigateUp() {
         finish();
         return true;
+    }
+    public interface CommandCallback {
+
+        void onRespSuccess(JSONObject result) throws JSONException;
+
+        void onRespError(String result);
+
     }
 }

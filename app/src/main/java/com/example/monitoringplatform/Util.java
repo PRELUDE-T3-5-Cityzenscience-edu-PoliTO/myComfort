@@ -139,7 +139,7 @@ public class Util {
         AppSingleton.getInstance(context).addToRequestQueue(JSONreq);
 
     }
-    public static void postParameter(Context context, String api, String extraParameter,String operation, String parameter, String parameter_value, boolean isInt,boolean isFloat,final Util.PostCallback responseCallback) throws JSONException {
+    public static void postParameter(Context context, String api, String extraParameter,String operation, String parameter, String parameter_value, boolean isInt,boolean isFloat, boolean isBool,final Util.PostCallback responseCallback) throws JSONException {
         SharedPreferences currentdetails = context.getSharedPreferences("currentdetails", Context.MODE_PRIVATE);
         String platform_ID = currentdetails.getString("platform_ID", "");
         String final_uri=operation+platform_ID+extraParameter;
@@ -151,7 +151,10 @@ public class Util {
         }else {
             if(isInt){
                 jsonBody.put("parameter_value", Integer.parseInt(parameter_value));
-            }else {
+            }if(isBool){
+                jsonBody.put("parameter_value", Boolean.parseBoolean(parameter_value));
+            }
+            else {
                 jsonBody.put("parameter_value", parameter_value);
             }
         }

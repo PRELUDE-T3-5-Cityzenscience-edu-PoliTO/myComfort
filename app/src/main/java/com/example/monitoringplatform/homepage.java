@@ -35,6 +35,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
+import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,6 +58,8 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     TextView windExt;
     TextView locationText;
     private String apiURL="https://api.openweathermap.org/data/2.5/weather";
+    private String catalogURL;
+    private String brokerURI;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -90,6 +93,31 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         CardView helpCard = (CardView) findViewById(R.id.helpCard);
         CardView mySettings = (CardView) findViewById(R.id.settingsCard);
 
+        try {
+            catalogURL = Util.getProperty("service_catalog",homepage.this);
+            brokerURI = Util.getProperty("brokerURI",homepage.this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Util.getService(homepage.this, catalogURL, brokerURI, "brokerURL", new Util.ServiceCallback() {
+            @Override
+            public void onReqSuccess(JSONObject result) {
+                SharedPreferences userdetails = homepage.this.getSharedPreferences("userdetails", MODE_PRIVATE);
+                String brokerURL=userdetails.getString("brokerURL","").replace("/broker","");
+                SharedPreferences.Editor editor = userdetails.edit();
+                editor.putString("brokerURL", brokerURL);
+                editor.apply();
+
+                startService(new Intent(homepage.this,mqtt_sub.class));
+            }
+
+            @Override
+            public void onReqError(String result) {
+
+            }
+        });
+
+
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -107,6 +135,14 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                 //Toast.makeText(homepage.this,"My overview",Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent(homepage.this, overview.class);
                 startActivity(intent);
+            }
+        });
+        helpCard.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Intent intent=new Intent(homepage.this, mqtt_sub.class);
+                //startActivity(intent);
+                //startService(new Intent(homepage.this,mqtt_sub.class));
             }
         });
         myGraphs.setOnClickListener(new View.OnClickListener() {
@@ -167,6 +203,8 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                 }
         });
     }
+
+
     public void showExitMenu(View v){
         PopupMenu popupMenu= new PopupMenu(this,v);
         popupMenu.setOnMenuItemClickListener(this);

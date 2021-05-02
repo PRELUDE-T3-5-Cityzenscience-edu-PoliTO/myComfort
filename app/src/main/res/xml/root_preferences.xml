@@ -48,6 +48,7 @@
             app:key="warning"
             app:summaryOff="No messages in case of anomalous values"
             app:summaryOn="Receive messages in case of anomalous values"
+            app:defaultValue="false"
             app:title="@string/warning" />
 
 

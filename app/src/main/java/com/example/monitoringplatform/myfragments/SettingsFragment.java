@@ -18,6 +18,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.example.monitoringplatform.R;
 import com.example.monitoringplatform.Util;
+import com.example.monitoringplatform.homepage;
+import com.example.monitoringplatform.mqtt_sub;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -41,6 +43,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         SharedPreferences status = getActivity().getSharedPreferences("status", MODE_PRIVATE);
         List<String> settingsList= new ArrayList<>();
         settingsList.add("name");
+        settingsList.add("warning");
         settingsList.add("platform_name");
         settingsList.add("inactive_time");
         settingsList.add("location");
@@ -49,7 +52,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         SharedPreferences userdetails = getActivity().getSharedPreferences("userdetails", MODE_PRIVATE);
         SharedPreferences.Editor editor = userdetails.edit();
         editor.putString("profileSettings", json_out);
-        editor.commit();
+        editor.apply();
         update(rootKey);
 
     }
@@ -76,19 +79,38 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         boolean isInt=false;
         boolean isFloat=false;
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String parameter_value=prefs.getString(key,"");
+        boolean isBool=false;
+        String parameter_value=null;
+        if(key.equals("warning")){
+            isBool=true;
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences currentdetails = getActivity().getSharedPreferences("currentdetails",MODE_PRIVATE);
+            parameter_value=String.valueOf(prefs.getBoolean(key,false));
+           // Toast.makeText(getContext(),currentdetails.getString("platform_ID",""),Toast.LENGTH_SHORT).show();
+
+            Intent intent=new Intent(this.getActivity(), mqtt_sub.class);
+            intent.putExtra("platform_ID",currentdetails.getString("platform_ID",""));
+            intent.putExtra("subscribe",prefs.getBoolean(key,false));
+            this.getActivity().startService(intent);
+
+        }else{
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            parameter_value=prefs.getString(key,"");
+        }
+
         SharedPreferences userdetails = this.getActivity().getSharedPreferences("userdetails", Context.MODE_PRIVATE);
         String profilesURL = userdetails.getString("profilesURL", "");
         if(key.equals("inactive_time")){
             isInt=true;
         }
+
         if(!key.equals("name")) {
             try {
-                Util.postParameter(getContext(), profilesURL, "/", "/setParameter/", key, parameter_value, isInt, isFloat, new Util.PostCallback() {
+                Util.postParameter(getContext(), profilesURL, "/", "/setParameter/", key, parameter_value, isInt, isFloat, isBool, new Util.PostCallback() {
                     @Override
                     public void onRespSuccess(JSONObject result) {
                         Toast.makeText(getActivity(), "Ok", Toast.LENGTH_SHORT).show();
+
 
                     }
 
@@ -125,9 +147,19 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                     @Override
                     public void onRespSuccess(String result) {
                         SharedPreferences.Editor editor = preferences.edit();
-                        editor.putString(profileSettings.get(finalI), result);
-                        editor.apply();
-                        createPref(rootKey);
+                        if(profileSettings.get(finalI).equals("warning")){
+                            editor.putBoolean(profileSettings.get(finalI), Boolean.parseBoolean(result));
+                            editor.apply();
+                            createPref(rootKey);
+
+                        }else {
+
+                            editor.putString(profileSettings.get(finalI), result);
+                            editor.apply();
+                            createPref(rootKey);
+                        }
+
+
 
                     }
 

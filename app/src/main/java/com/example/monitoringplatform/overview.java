@@ -47,7 +47,7 @@ public class overview extends AppCompatActivity {
     private Map<String, String> rooms_dict = new HashMap<String, String>();
     private TextView nodata;
     private ProgressBar loadingProgressBar;
-    int myFlag=3;
+    Map<String, Integer> flagDict = new HashMap<String, Integer>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,31 +152,43 @@ public class overview extends AppCompatActivity {
         });
 
     }
-    public void buildRoom(JSONArray mylist,String room_ID,Float pmv) throws JSONException {
+    public void buildRoom(JSONArray mylist,String room_ID,Float pmv) {
         String room=null;
-        myFlag--;
-        if(myFlag==0){
+        flagDict.put(room_ID, flagDict.get(room_ID) - 1);
+        if(flagDict.get(room_ID)==0){
             String temp = null;
             String hum=null;
             String wind=null;
             for (int i = 0; i < mylist.length(); i++) {
-                if(mylist.getJSONObject(i).getString("parameter").equals("temperature")){
-                    String temp_value= String.valueOf(df.format(BigDecimal.valueOf(mylist.getJSONObject(i).getDouble("value")).floatValue()));
-                    String temp_unit=mylist.getJSONObject(i).getString("unit");
-                    temp=temp_value+"°"+temp_unit;
+                try {
+                    if(mylist.getJSONObject(i).getString("parameter").equals("temperature")){
+                        String temp_value= String.valueOf(df.format(BigDecimal.valueOf(mylist.getJSONObject(i).getDouble("value")).floatValue()));
+                        String temp_unit=mylist.getJSONObject(i).getString("unit");
+                        temp=temp_value+"°"+temp_unit;
 
+                    }
+                } catch (JSONException e) {
+                   temp="None";
                 }
-                if(mylist.getJSONObject(i).getString("parameter").equals("humidity")){
-                    String hum_value= String.valueOf(df.format(BigDecimal.valueOf(mylist.getJSONObject(i).getDouble("value")).floatValue()));
-                    String hum_unit=mylist.getJSONObject(i).getString("unit");
-                    hum=hum_value+hum_unit;
+                try {
+                    if(mylist.getJSONObject(i).getString("parameter").equals("humidity")){
+                        String hum_value= String.valueOf(df.format(BigDecimal.valueOf(mylist.getJSONObject(i).getDouble("value")).floatValue()));
+                        String hum_unit=mylist.getJSONObject(i).getString("unit");
+                        hum=hum_value+hum_unit;
 
+                    }
+                } catch (JSONException e) {
+                    hum="None";
                 }
-                if(mylist.getJSONObject(i).getString("parameter").equals("wind")){
-                    String wind_value= String.valueOf(df.format(BigDecimal.valueOf(mylist.getJSONObject(i).getDouble("value")).floatValue()));
-                    String wind_unit=mylist.getJSONObject(i).getString("unit");
-                    wind=wind_value+" "+wind_unit;
+                try {
+                    if(mylist.getJSONObject(i).getString("parameter").equals("wind")){
+                        String wind_value= String.valueOf(df.format(BigDecimal.valueOf(mylist.getJSONObject(i).getDouble("value")).floatValue()));
+                        String wind_unit=mylist.getJSONObject(i).getString("unit");
+                        wind=wind_value+" "+wind_unit;
 
+                    }
+                } catch (JSONException e) {
+                    wind="None";
                 }
 
             }
@@ -185,11 +197,17 @@ public class overview extends AppCompatActivity {
                     room = entry.getValue();
                 }
             }
-            String PMV=computePMV(pmv);
+            String PMV=null;
+            if (pmv!=null) {
+                PMV = computePMV(pmv);
+            }else{
+                PMV= "None";
+            }
             rList.add(new roomOverview_item(R.drawable.ic_baseline_room_preferences_24,
                     R.drawable.ic_baseline_thermostat_24,R.drawable.ic_baseline_humidity,
                     R.drawable.ic_baseline_air_24,room,temp,hum,wind,PMV));
-            myFlag=3;
+            //Toast.makeText(overview.this,rooms.toString(),Toast.LENGTH_LONG).show();
+            rooms.remove(room_ID);
             startView();
 
         }
@@ -288,8 +306,19 @@ public class overview extends AppCompatActivity {
                     JSONArray resultList = new JSONArray();
                     JSONObject object = array.getJSONObject(i);
                     String room_ID=object.getString("room_ID");
-                    rooms.add(room_ID);
-                    Float pmv=(BigDecimal.valueOf(object.getDouble("PMV")).floatValue());
+                    if (!rooms.contains(room_ID)) {
+                        rooms.add(room_ID);
+                        flagDict.put(room_ID,3);
+                    }
+                    Float pmv_tmp;
+                    try{
+                        pmv_tmp=(BigDecimal.valueOf(object.getDouble("PMV")).floatValue());
+
+                    }catch (JSONException e){
+                        pmv_tmp=null;
+
+                    }
+                    Float pmv=pmv_tmp;
                     Util.getPlatformInfo(serverURL, platform_ID, room_ID+"?parameter=temperature", overview.this, new Util.ResponseCallback(){
 
                         @Override
@@ -302,7 +331,10 @@ public class overview extends AppCompatActivity {
 
                         @Override
                         public void onRespError(String result) {
-                            Toast.makeText(overview.this,result+"temperature error",Toast.LENGTH_SHORT).show();
+                            JSONObject obj = new JSONObject();
+                            resultList.put(obj);
+                            buildRoom(resultList,room_ID,pmv);
+                            //Toast.makeText(overview.this,result+" temperature error",Toast.LENGTH_SHORT).show();
 
                         }
                     });
@@ -318,7 +350,10 @@ public class overview extends AppCompatActivity {
 
                         @Override
                         public void onRespError(String result) {
-                            Toast.makeText(overview.this,result+"humidity error",Toast.LENGTH_SHORT).show();
+                            JSONObject obj = new JSONObject();
+                            resultList.put(obj);
+                            buildRoom(resultList,room_ID,pmv);
+                            //Toast.makeText(overview.this,result+" humidity error",Toast.LENGTH_SHORT).show();
 
                         }
                     });
@@ -334,7 +369,10 @@ public class overview extends AppCompatActivity {
 
                         @Override
                         public void onRespError(String result) {
-                            Toast.makeText(overview.this,result+ "wind error",Toast.LENGTH_SHORT).show();
+                            JSONObject obj = new JSONObject();
+                            resultList.put(obj);
+                            buildRoom(resultList,room_ID,pmv);
+                            //Toast.makeText(overview.this,result+ " wind error",Toast.LENGTH_SHORT).show();
 
                         }
                     });
