@@ -274,8 +274,14 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent newRoomActivity= new Intent(homepage.this, new_room_form_name.class);
-                        startActivity(newRoomActivity);
+                        SharedPreferences currentdetails = homepage.this.getSharedPreferences("currentdetails", Context.MODE_PRIVATE);
+                        String platform_ID = currentdetails.getString("platform_ID", "");
+                        if(!platform_ID.equals("")) {
+                            Intent newRoomActivity = new Intent(homepage.this, new_room_form_name.class);
+                            startActivity(newRoomActivity);
+                        }else{
+                            Toast.makeText(homepage.this,"You can't! No platform selected",Toast.LENGTH_SHORT).show();
+                        }
 
                     }
                 });
