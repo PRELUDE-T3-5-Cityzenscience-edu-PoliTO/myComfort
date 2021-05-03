@@ -80,7 +80,7 @@ public class mqtt_sub extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)  {
         try{
-            Boolean discFlag=intent.getBooleanExtra("subscribe",false);
+            Boolean discFlag=intent.getBooleanExtra("discFlag",false);
             if(discFlag){
                 disconnectClient();
                 onDestroy();
