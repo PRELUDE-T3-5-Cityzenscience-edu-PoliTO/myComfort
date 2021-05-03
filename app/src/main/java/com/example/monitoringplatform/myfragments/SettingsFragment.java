@@ -165,7 +165,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
                     @Override
                     public void onRespError(String result) {
-                        Toast.makeText(getActivity(), profileSettings.get(finalI), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), profileSettings.get(finalI), Toast.LENGTH_SHORT).show();
 
                     }
                 });

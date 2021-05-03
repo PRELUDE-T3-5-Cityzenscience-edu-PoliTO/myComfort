@@ -345,26 +345,19 @@
             app:layout_constraintTop_toBottomOf="@+id/linearPMV">
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/parameter_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="310dp"
+                    android:padding="4dp"
+                    android:scrollbars="vertical"/>
 
-                <FrameLayout
-                    android:id="@+id/frameLayoutParameter"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </RelativeLayout>
         </LinearLayout>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView

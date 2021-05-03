@@ -79,6 +79,16 @@ public class mqtt_sub extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)  {
+        try{
+            Boolean discFlag=intent.getBooleanExtra("subscribe",false);
+            if(discFlag){
+                disconnectClient();
+                onDestroy();
+            }
+
+        } catch (Exception e) {
+            //e.printStackTrace();
+        }
         System.out.println("Services started");
         connect(mqttAndroidClient,mqttConnectOptions);
 
@@ -108,7 +118,7 @@ public class mqtt_sub extends Service {
                     @Override
                     public void connectionLost(Throwable cause) {
                         System.out.println("Connection was lost!");
-                        Toast.makeText(mqtt_sub.this, "Connection lost", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mqtt_sub.this, "Connection lost", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -202,6 +212,13 @@ public class mqtt_sub extends Service {
             e.printStackTrace();
         }
 
+    }
+    private void disconnectClient(){
+        try {
+            mqttAndroidClient.disconnect();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

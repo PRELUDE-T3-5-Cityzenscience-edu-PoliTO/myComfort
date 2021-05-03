@@ -14,7 +14,7 @@
             app:title="Location"
             app:useSimpleSummaryProvider="true" />
         <EditTextPreference
-            app:defaultValue="Name"
+            app:defaultValue=""
             app:key="platform_name"
             app:title="Platform Name"
             app:useSimpleSummaryProvider="true" />

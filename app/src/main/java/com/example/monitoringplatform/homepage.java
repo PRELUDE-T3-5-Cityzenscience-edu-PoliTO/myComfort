@@ -372,7 +372,7 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
 
             @Override
             public void onRespError(String result) {
-                Toast.makeText(homepage.this, result, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(homepage.this, result, Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -537,29 +537,7 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     public void performLogout(){
         Intent intent=new Intent(homepage.this, login.class);
         startActivity(intent);
-        SharedPreferences currentdetails = homepage.this.getSharedPreferences("currentdetails", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor_c = currentdetails.edit();
-        editor_c.clear();
-        editor_c.commit();
-
-        SharedPreferences userdetails = homepage.this.getSharedPreferences("userdetails", MODE_PRIVATE);
-        SharedPreferences.Editor editor_u = userdetails.edit();
-        editor_u.clear();
-        editor_u.commit();
-        /*
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(homepage.this);
-        SharedPreferences.Editor editor_p = prefs.edit();
-        editor_p.clear();
-        editor_p.commit();
-
-         */
-
-
-
-        SharedPreferences status = homepage.this.getSharedPreferences("status", MODE_PRIVATE);
-        SharedPreferences.Editor editor = status.edit();
-        editor.putBoolean("login",false);
-        editor.commit();
+        Util.clearAll(this);
         finish();
 
     }
@@ -602,7 +580,7 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
 
             @Override
             public void onRespError(String result) {
-                Toast.makeText(homepage.this,result,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(homepage.this,result,Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -651,7 +629,7 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
 
             @Override
             public void onRespError(String result) {
-                Toast.makeText(homepage.this,result,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(homepage.this,result,Toast.LENGTH_SHORT).show();
 
 
             }

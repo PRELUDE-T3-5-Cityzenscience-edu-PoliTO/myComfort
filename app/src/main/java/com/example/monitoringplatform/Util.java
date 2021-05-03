@@ -1,10 +1,13 @@
 package com.example.monitoringplatform;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.preference.PreferenceManager;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -31,6 +34,32 @@ public class Util {
         InputStream inputStream = assetManager.open("config.properties");
         properties.load(inputStream);
         return properties.getProperty(key);
+    }
+    public static void  clearAll(Context context){
+        Intent intentMqtt=new Intent(context, mqtt_sub.class);
+        intentMqtt.putExtra("discFlag",true);
+        context.startService(intentMqtt);
+
+        SharedPreferences currentdetails = context.getSharedPreferences("currentdetails", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor_c = currentdetails.edit();
+        editor_c.clear();
+        editor_c.apply();
+
+        SharedPreferences userdetails = context.getSharedPreferences("userdetails", MODE_PRIVATE);
+        SharedPreferences.Editor editor_u = userdetails.edit();
+        editor_u.clear();
+        editor_u.commit();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor_p = prefs.edit();
+        editor_p.clear();
+        editor_p.commit();
+
+        SharedPreferences status = context.getSharedPreferences("status", MODE_PRIVATE);
+        SharedPreferences.Editor editor = status.edit();
+        editor.putBoolean("login",false);
+        editor.commit();
+
     }
     public static void saveData(Context context, String name_pref, String name, String value){
         SharedPreferences sharedPreferences = context.getSharedPreferences(name_pref, MODE_PRIVATE);
