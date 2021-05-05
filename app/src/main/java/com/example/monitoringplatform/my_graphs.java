@@ -1,7 +1,9 @@
 package com.example.monitoringplatform;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +18,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.monitoringplatform.ui.login.login;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -39,6 +43,7 @@ public class my_graphs extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
         Intent i = getIntent();
         Bundle extras = i.getExtras();
         if(extras.containsKey("isHome")) {
@@ -48,13 +53,14 @@ public class my_graphs extends AppCompatActivity {
         webView=(WebView) findViewById(R.id.webview);
         webView.setWebViewClient(new WebViewClient());
         WebSettings ws = webView.getSettings();
-        ws.setJavaScriptEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
         //Choose Mobile/Desktop client.
         //ws.setUserAgentString(desktop_mode);
 
         ws.setJavaScriptEnabled(true);
         ws.setAllowFileAccess(true);
         String TAG="html5";
+        
 
 
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.ECLAIR) {
@@ -113,6 +119,7 @@ public class my_graphs extends AppCompatActivity {
                             {
                                 nodata.setVisibility(View.GONE);
                                 webView.loadUrl(result);
+                                System.out.println(result);
                             }
 
 

@@ -37,18 +37,8 @@ public class Util {
         return properties.getProperty(key);
     }
     public static void  clearAll(Context context){
-        
-        Intent intentMqtt=new Intent(context, mqtt_sub.class);
-        intentMqtt.putExtra("discFlag",true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(intentMqtt);
-        }else{
-            context.startService(intentMqtt);
 
-        }
-
-
-
+      
         SharedPreferences currentdetails = context.getSharedPreferences("currentdetails", MODE_PRIVATE);
         SharedPreferences.Editor editor_c = currentdetails.edit();
         editor_c.clear();

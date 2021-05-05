@@ -112,7 +112,7 @@ public class new_platform_form_location extends AppCompatActivity {
                                     try {
                                         if(result.getBoolean("result")){
                                             Gson gsonDict = new Gson();
-                                            String jsonDict = userdetails.getString("platforms_dict", "");
+                                            String jsonDict = userdetails.getString("platforms_dict", new HashMap<String, String>().toString());
                                             Type typeDict = new TypeToken<Map<String,String>>() {
                                             }.getType();
                                             Map<String,String> platforms_dict = gsonDict.fromJson(jsonDict, typeDict);
@@ -151,7 +151,6 @@ public class new_platform_form_location extends AppCompatActivity {
         });
     }
     public void openNew(){
-
         Intent intent=new Intent(getApplicationContext(), new_room_form_name.class);
         intent.putExtra("platform_ID",plat_ID);
         intent.putExtra("platform_name", platform_name);

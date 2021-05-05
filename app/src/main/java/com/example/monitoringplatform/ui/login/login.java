@@ -192,13 +192,18 @@ public class login extends AppCompatActivity {
             JSONObject temp= new JSONObject(object.toString());
             JSONArray jsonArray = temp.getJSONArray("catalog_list");
             if (jsonArray.length()==0){
-                SharedPreferences userdetails = login.this.getSharedPreferences("userdetails", MODE_PRIVATE);
-                platforms_dict.put("", "");
-                Gson gson_out= new Gson();
-                String json_out= gson_out.toJson(platforms_dict);
-                SharedPreferences.Editor editor = userdetails.edit();
-                editor.putString("platforms_dict", json_out);
-                editor.apply();
+                Util.getService(login.this, login.this.apiURL, profilesURI, "profilesURL", new Util.ServiceCallback() {
+                            @Override
+                            public void onReqSuccess(JSONObject result) {
+
+                            }
+
+                            @Override
+                            public void onReqError(String result) {
+
+                            }
+                        });
+
 
                 Toast.makeText(login.this,"Welcome back "+user_ID,Toast.LENGTH_SHORT).show();
                 SharedPreferences status = login.this.getSharedPreferences("status", MODE_PRIVATE);

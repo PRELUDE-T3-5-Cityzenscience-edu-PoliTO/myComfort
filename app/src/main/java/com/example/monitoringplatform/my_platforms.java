@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -242,25 +243,28 @@ public class my_platforms extends AppCompatActivity {
         Type typeDict = new TypeToken<Map<String,String>>() {
         }.getType();
         Map<String,String> platforms_dict = gsonDict.fromJson(jsonDict, typeDict);
-        int platformsSize=platforms_dict.size();
-        for (Map.Entry<String, String> entry : platforms_dict.entrySet()) {
-            Util.getPlatformInfo(serverURL, entry.getKey(), "creation_date", my_platforms.this, new Util.ResponseCallback() {
-                @Override
-                public void onRespSuccess(String result) throws JSONException {
-                    map.put(entry.getKey(),result);
-                    mflag++;
-                    buildList(platformsSize);
-                }
+        if(!jsonDict.equals("")) {
+            int platformsSize = platforms_dict.size();
+            for (Map.Entry<String, String> entry : platforms_dict.entrySet()) {
+                Util.getPlatformInfo(serverURL, entry.getKey(), "creation_date", my_platforms.this, new Util.ResponseCallback() {
+                    @Override
+                    public void onRespSuccess(String result) throws JSONException {
+                        map.put(entry.getKey(), result);
+                        mflag++;
+                        buildList(platformsSize);
+                    }
 
-                @Override
-                public void onRespError(String result) {
-                    //Toast.makeText(my_platforms.this,result,Toast.LENGTH_SHORT).show();
-                    map.put(entry.getKey(),"None");
-                    mflag++;
-                    buildList(platformsSize);
-                }
-            });
+                    @Override
+                    public void onRespError(String result) {
+                        //Toast.makeText(my_platforms.this,result,Toast.LENGTH_SHORT).show();
+                        map.put(entry.getKey(), "None");
+                        mflag++;
+                        buildList(platformsSize);
+                    }
+                });
+            }
         }
+
 
 
     }
@@ -342,8 +346,16 @@ public class my_platforms extends AppCompatActivity {
     }
     @Override
     public boolean onSupportNavigateUp() {
+        Intent intent= new Intent(my_platforms.this,homepage.class);
+        startActivity(intent);
         finish();
         return true;
+    }
+    @Override
+    public void onBackPressed() {
+        Intent intent= new Intent(my_platforms.this,homepage.class);
+        startActivity(intent);
+        finish();
     }
     public interface CommandCallback {
 

@@ -186,6 +186,7 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                 onStop();
                 Intent intent= new Intent(homepage.this,my_platforms.class);
                 startActivity(intent);
+                finish();
             }
         });
         logOutB.setOnClickListener(new OnClickListener() {
@@ -276,8 +277,12 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                     public void onClick(View view) {
                         SharedPreferences currentdetails = homepage.this.getSharedPreferences("currentdetails", Context.MODE_PRIVATE);
                         String platform_ID = currentdetails.getString("platform_ID", "");
+                        String platform_name = currentdetails.getString("platform_name", "");
                         if(!platform_ID.equals("")) {
                             Intent newRoomActivity = new Intent(homepage.this, new_room_form_name.class);
+                            newRoomActivity.putExtra("platform_ID", platform_ID);
+                            newRoomActivity.putExtra("platform_name", platform_name);
+
                             startActivity(newRoomActivity);
                         }else{
                             Toast.makeText(homepage.this,"You can't! No platform selected",Toast.LENGTH_SHORT).show();
@@ -356,33 +361,36 @@ public class homepage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         String profilesURL = userdetails.getString("profilesURL", "");
         Gson gsonDict = new Gson();
         String jsonDict = userdetails.getString("platforms_dict", "");
-        Type typeDict = new TypeToken<Map<String,String>>() {
-        }.getType();
-        Map<String,String> platforms_dict = gsonDict.fromJson(jsonDict, typeDict);
-        
-        for (Map.Entry<String, String> entry : platforms_dict.entrySet()) { 
-            Util.getPlatformInfo(profilesURL, entry.getKey(), "platform_name", homepage.this, new Util.ResponseCallback() {
+        if(!jsonDict.equals("")) {
 
-            @Override
-            public void onRespSuccess(String result) {
+            Type typeDict = new TypeToken<Map<String, String>>() {
+            }.getType();
+            Map<String, String> platforms_dict = gsonDict.fromJson(jsonDict, typeDict);
 
-                entry.setValue(result.replace("\"", ""));
-                Gson gson_out = new Gson();
-                String json_out = gson_out.toJson(platforms_dict);
-                SharedPreferences.Editor editor = userdetails.edit();
-                editor.putString("platforms_dict", json_out);
-                editor.apply();
-                createSpinner();
+            for (Map.Entry<String, String> entry : platforms_dict.entrySet()) {
+                Util.getPlatformInfo(profilesURL, entry.getKey(), "platform_name", homepage.this, new Util.ResponseCallback() {
 
+                    @Override
+                    public void onRespSuccess(String result) {
+
+                        entry.setValue(result.replace("\"", ""));
+                        Gson gson_out = new Gson();
+                        String json_out = gson_out.toJson(platforms_dict);
+                        SharedPreferences.Editor editor = userdetails.edit();
+                        editor.putString("platforms_dict", json_out);
+                        editor.apply();
+                        createSpinner();
+
+                    }
+
+                    @Override
+                    public void onRespError(String result) {
+                        //Toast.makeText(homepage.this, result, Toast.LENGTH_SHORT).show();
+
+                    }
+                });
             }
-
-            @Override
-            public void onRespError(String result) {
-                //Toast.makeText(homepage.this, result, Toast.LENGTH_SHORT).show();
-
-            }
-        });
-    }
+        }
 
     }
 
