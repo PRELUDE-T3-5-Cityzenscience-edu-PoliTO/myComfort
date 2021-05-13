@@ -176,6 +176,7 @@ public class Util {
         jsonBody.put("parameter", parameter);
         if (isFloat && parameter_value!=null){
             jsonBody.put("parameter_value", Double.parseDouble(parameter_value));
+            System.out.println(Double.parseDouble(parameter_value));
         }else {
             if(isInt){
                 jsonBody.put("parameter_value", Integer.parseInt(parameter_value));

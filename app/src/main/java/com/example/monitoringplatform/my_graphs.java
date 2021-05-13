@@ -4,13 +4,16 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.HttpAuthHandler;
 import android.webkit.WebSettings;
+import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
@@ -52,15 +55,17 @@ public class my_graphs extends AppCompatActivity {
         nodata=findViewById(R.id.NoDataGraphs);
         webView=(WebView) findViewById(R.id.webview);
         webView.setWebViewClient(new WebViewClient());
+        //CookieManager.getInstance().removeAllCookies(null);
         WebSettings ws = webView.getSettings();
-        webView.getSettings().setDomStorageEnabled(true);
+
         //Choose Mobile/Desktop client.
         //ws.setUserAgentString(desktop_mode);
 
         ws.setJavaScriptEnabled(true);
         ws.setAllowFileAccess(true);
+
         String TAG="html5";
-        
+
 
 
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.ECLAIR) {
@@ -118,7 +123,11 @@ public class my_graphs extends AppCompatActivity {
                             if (savedInstanceState == null)
                             {
                                 nodata.setVisibility(View.GONE);
+                                //Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(result));
+                                //startActivity(browserIntent);
                                 webView.loadUrl(result);
+                                String myCookies = CookieManager.getInstance().getCookie("https://grafana-mp.eu.ngrok.io");
+                                System.out.println(myCookies);
                                 System.out.println(result);
                             }
 
@@ -209,15 +218,10 @@ public class my_graphs extends AppCompatActivity {
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState)
-    {
-        super.onRestoreInstanceState(savedInstanceState);
-        webView.restoreState(savedInstanceState);
-    }
-    @Override
     public void onBackPressed(){
         if (webView.canGoBack()){
             webView.goBack();
+            WebStorage.getInstance().deleteAllData();
         }
         else{
             super.onBackPressed();

@@ -225,6 +225,8 @@ public class mqtt_sub extends Service {
     public void onDestroy() {
         super.onDestroy();
         System.out.println("Service destroyed by user.");
+        mqttAndroidClient.unregisterResources();
+        mqttAndroidClient.close();
     }
     public static void createNotificationChannel(Context context){
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
