@@ -16,3 +16,12 @@ Homepage                   |  Overview                 | Sensor Network        |
 * Open personal dashboard with historical data
 * Recieve tips, notifications and alerting
 
+## Links
+Main repository:
+> https://github.com/AndreaAvignone/PMV-Monitoring-Platform
+
+Platform installation:
+>https://github.com/AndreaAvignone/Monitoring-Platform-kit
+
+## License
+
