@@ -24,4 +24,4 @@ Platform installation:
 >https://github.com/AndreaAvignone/Monitoring-Platform-kit
 
 ## License
-
+[GPL-3.0](./LICENSE)
