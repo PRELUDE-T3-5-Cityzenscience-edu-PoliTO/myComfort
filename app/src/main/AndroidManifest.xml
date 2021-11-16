@@ -3,6 +3,10 @@
     package="com.example.monitoringplatform">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
 
     <application
         android:allowBackup="true"
@@ -12,20 +16,45 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MonitoringPlatform"
         android:usesCleartextTraffic="true">
-        <activity android:name=".my_platforms"></activity>
-        <activity android:name=".rooms_settings" />
-        <activity android:name=".profile_settings" />
+
+        <service android:name="org.eclipse.paho.android.service.MqttService" />
+        <activity android:name=".registration" />
+        <activity android:name=".add_room.new_room_form_name" />
+        <activity android:name=".add_platform.new_platform_form_location" />
+        <activity android:name=".add_platform.new_platform_form" />
+        <activity android:name=".add_platform.new_platform" />
+        <activity android:name=".complete_overview" />
+        <activity android:name=".tips" />
+        <activity android:name=".preferences.notification" />
+        <activity android:name=".network" />
+        <activity android:name=".my_platforms" />
+        <activity android:name=".preferences.rooms_settings" />
+        <activity android:name=".preferences.rooms_devices" />
+        <activity android:name=".preferences.profile_settings" />
         <activity android:name=".overview" />
         <activity android:name=".homepage" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".MainActivity2" />
-        <activity android:name=".login">
+        <activity
+            android:name=".my_graphs"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".ui.login.login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name=".mqtt_sub" />
+        <!-- BroadcastReceiver that starts MqttConnectionManagerService on device boot -->
+        <receiver android:name=".MqttServiceStartReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".reminder" />
     </application>
 
 </manifest>

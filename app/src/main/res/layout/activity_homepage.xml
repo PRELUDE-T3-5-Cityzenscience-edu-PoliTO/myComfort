@@ -81,6 +81,82 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cardViewWeather"
+                        android:layout_width="191dp"
+                        android:layout_height="65dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="32dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.086">
+
+
+                        <TextView
+                            android:id="@+id/city"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="20dp"
+                            android:text="No City"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="@id/cardViewWeather"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/conditionImage"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:adjustViewBounds="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/city"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="1.0" />
+
+                        <TextView
+                            android:id="@+id/temperature_valueExt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="1dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="5dp"
+                            android:gravity="center"
+                            android:textSize="11sp"
+                            app:layout_constraintEnd_toStartOf="@id/humidity_valueExt"
+                            app:layout_constraintTop_toBottomOf="@+id/city" />
+
+
+                        <TextView
+                            android:id="@+id/humidity_valueExt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="1dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="5dp"
+                            android:gravity="center"
+                            android:textSize="11sp"
+                            app:layout_constraintEnd_toStartOf="@id/wind_valueExt"
+                            app:layout_constraintTop_toBottomOf="@+id/city" />
+
+
+                        <TextView
+                            android:id="@+id/wind_valueExt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="1dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="16dp"
+                            android:gravity="center"
+                            android:textSize="11sp"
+                            app:layout_constraintEnd_toEndOf="@id/cardViewWeather"
+                            app:layout_constraintTop_toBottomOf="@+id/city" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
                     <TextView
                         android:id="@+id/textView2"
                         android:layout_width="wrap_content"
@@ -88,9 +164,12 @@
                         android:layout_marginStart="26dp"
                         android:layout_marginTop="16dp"
                         android:text="Welcome"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeMinTextSize="8sp"
+                        android:autoSizeMaxTextSize="16sp"
+                        android:autoSizeStepGranularity="2sp"
                         android:textAllCaps="true"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="16sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -128,19 +207,7 @@
                         app:layout_constraintBottom_toBottomOf="@+id/myplatforms"
                         app:layout_constraintStart_toEndOf="@+id/myplatforms" />
 
-                    <ImageView
-                        android:id="@+id/profileB"
-                        android:layout_width="51dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:layout_marginBottom="32dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:padding="1dp"
-                        android:src="@drawable/ic_profile"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.228" />
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -168,7 +235,7 @@
                     android:elevation="12dp"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="8dp">
+                    app:cardCornerRadius="25dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -215,7 +282,7 @@
                     android:elevation="12dp"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="8dp">
+                    app:cardCornerRadius="25dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -266,7 +333,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/learnCard"
+                    android:id="@+id/myNetwork"
                     android:layout_width="128dp"
                     android:layout_height="128dp"
                     android:layout_margin="8dp"
@@ -275,7 +342,7 @@
                     android:elevation="12dp"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="8dp">
+                    app:cardCornerRadius="25dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -322,7 +389,7 @@
                     android:elevation="12dp"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="8dp">
+                    app:cardCornerRadius="25dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -382,7 +449,7 @@
                     android:elevation="12dp"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="8dp">
+                    app:cardCornerRadius="25dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -429,7 +496,7 @@
                     android:elevation="12dp"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="8dp">
+                    app:cardCornerRadius="25dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -468,21 +535,77 @@
 
             </LinearLayout>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/add_fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginBottom="50dp"
-                android:backgroundTint="#009688"
-                android:src="@drawable/ic_plus"
-                app:fabSize="normal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-                app:layout_constraintVertical_bias="0.94" />
+        <!--Action name text for the add person button-->
+        <!--Make sure that you are constraining this Text
+            to the add Person FAB button-->
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginBottom="50dp"
+            android:backgroundTint="#009688"
+            android:src="@drawable/ic_plus"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_platform_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="56dp"
+            android:backgroundTint="#009688"
+            android:contentDescription="@string/app_name"
+
+            app:fabSize="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.221"
+            app:layout_constraintStart_toEndOf="@+id/add_fab"
+            app:srcCompat="@drawable/ic_platform"
+            app:tint="@color/colorBackground" />
+
+        <TextView
+            android:id="@+id/add_platform_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Platform"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/add_platform_fab"
+            app:layout_constraintEnd_toEndOf="@+id/add_platform_fab"
+            app:layout_constraintTop_toBottomOf="@+id/add_platform_fab" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_room_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="56dp"
+            android:backgroundTint="#009688"
+            android:contentDescription="@string/app_name"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/add_fab"
+            app:layout_constraintHorizontal_bias="0.834"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/ic_baseline_room_preferences_24"
+            app:tint="@color/colorBackground" />
+
+        <TextView
+            android:id="@+id/add_room_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Room"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/add_room_fab"
+            app:layout_constraintStart_toStartOf="@+id/add_room_fab"
+            app:layout_constraintTop_toBottomOf="@+id/add_room_fab" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

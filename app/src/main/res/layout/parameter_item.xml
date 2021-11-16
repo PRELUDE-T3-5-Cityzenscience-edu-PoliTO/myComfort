@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:layout_width="128dp"
+android:layout_height="128dp"
+android:layout_marginLeft="-5dp"
+app:cardCornerRadius="18dp"
+app:cardElevation="12dp"
+app:cardUseCompatPadding="true"
+app:cardPreventCornerOverlap="false">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="142dp"
+        android:layout_margin="0dp"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/parameter_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="0dp"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
+            android:text="Temperature"
+            android:includeFontPadding="false"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/parameter_icon"
+            android:layout_width="38dp"
+            android:layout_height="44dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginBottom="72dp"
+            android:padding="0dp"
+            android:src="@drawable/ic_round_blur_on_24" />
+
+        <TextView
+            android:id="@+id/parameter_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="38dp"
+            android:layout_marginEnd="3dp"
+            android:gravity="center"
+            android:text="20°C"
+            android:textColor="#3F51B5"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/parameter_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="9dp"
+            android:layout_marginBottom="55dp"
+            android:gravity="center_vertical"
+            android:text="10/05/2021 18:50"
+            android:textColor="#03A9F4"
+            android:textSize="9sp" />
+
+
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>

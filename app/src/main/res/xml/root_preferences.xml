@@ -4,23 +4,19 @@
     <PreferenceCategory app:title="@string/profiles_header">
 
         <EditTextPreference
-            app:defaultValue="Name"
             app:key="name"
             app:title="@string/signature_title"
             app:useSimpleSummaryProvider="true" />
         <EditTextPreference
-            app:defaultValue="Location"
             app:key="location"
             app:title="Location"
             app:useSimpleSummaryProvider="true" />
         <EditTextPreference
-            app:defaultValue="Name"
             app:key="platform_name"
             app:title="Platform Name"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            app:defaultValue="30 minutes"
             app:entries="@array/inactive_entries"
             app:entryValues="@array/inactive_values"
             app:key="inactive_time"
@@ -35,7 +31,7 @@
             app:title="Set preferences">
             <intent
                 android:targetPackage="com.example.monitoringplatform"
-                android:targetClass="com.example.monitoringplatform.rooms_settings" />
+                android:targetClass="com.example.monitoringplatform.preferences.rooms_settings" />
         </Preference>
 
 
@@ -48,6 +44,7 @@
             app:key="warning"
             app:summaryOff="No messages in case of anomalous values"
             app:summaryOn="Receive messages in case of anomalous values"
+            app:defaultValue="false"
             app:title="@string/warning" />
 
 
