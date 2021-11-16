@@ -3,9 +3,9 @@
 This is the source code for the Android application developed as user interface for the project presented in:
 > https://github.com/AndreaAvignone/PMV-Monitoring-Platform
 
-Homepage                   |  Overview                 | Sensor Network        | Notification        |
-:-------------------------:|:-------------------------:|:---------------------:|:-------------------:|
-<img src="https://github.com/AndreaAvignone/myComfort/blob/main/pictures/homepage.jpg" width="200">  |  <img src="https://github.com/AndreaAvignone/myComfort/blob/main/pictures/overview.jpg" width="200">  | <img src="https://github.com/AndreaAvignone/myComfort/blob/main/pictures/network.jpg" width="200"> | <img src="https://github.com/AndreaAvignone/myComfort/blob/main/pictures/notification.jpg" width="200"> 
+Homepage                   |  Overview                 | Sensor Network        | Notification        | Dashboard           |
+:-------------------------:|:-------------------------:|:---------------------:|:-------------------:|:-------------------:|
+<img src="https://github.com/AndreaAvignone/myComfort/blob/main/pictures/homepage.jpg" width="200">  |  <img src="https://github.com/AndreaAvignone/myComfort/blob/main/pictures/overview.jpg" width="200">  | <img src="https://github.com/AndreaAvignone/myComfort/blob/main/pictures/network.jpg" width="200"> | <img src="https://github.com/AndreaAvignone/myComfort/blob/main/pictures/notification.jpg" width="200"> | <img src="https://github.com/AndreaAvignone/myComfort/blob/main/pictures/dashboard.jpg" width="200"> 
 
 
 ## Features
