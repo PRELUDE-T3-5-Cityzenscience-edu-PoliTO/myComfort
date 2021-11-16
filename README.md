@@ -9,4 +9,5 @@ This is the source code for the Android application developed as user interface 
 * Set user configurations
 * Check measurements and thermal comfort indicators (PMV and PPD)
 * Open personal dashboard with historical data
-* Recieve notifications and alerting
+* Recieve tips, notifications and alerting
+
