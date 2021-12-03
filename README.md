@@ -7,7 +7,7 @@ and described in the paper: ...
 
 Homepage                   |  Overview                 | Sensor Network        | Notification        | Dashboard           |
 :-------------------------:|:-------------------------:|:---------------------:|:-------------------:|:-------------------:|
-<img src="https://github.com/AndreaAvignone/myComfort/blob/main/pictures/homepage.jpg" width="200">  |  <img src="https://github.com/AndreaAvignone/myComfort/blob/main/pictures/overview.jpg" width="200">  | <img src="https://github.com/AndreaAvignone/myComfort/blob/main/pictures/network.jpg" width="200"> | <img src="https://github.com/AndreaAvignone/myComfort/blob/main/pictures/notification.jpg" width="200"> | <img src="https://github.com/AndreaAvignone/myComfort/blob/main/pictures/dashboard.jpg" width="200"> 
+<img src="https://github.com/PRELUDE-T3-5-Cityzenscience-edu-PoliTO/myComfort/blob/main/pictures/homepage.jpg" width="200">  |  <img src="https://github.com/PRELUDE-T3-5-Cityzenscience-edu-PoliTO/myComfort/blob/main/pictures/overview.jpg" width="200">  | <img src="https://github.com/PRELUDE-T3-5-Cityzenscience-edu-PoliTO/myComfort/blob/main/pictures/network.jpg" width="200"> | <img src="https://github.com/PRELUDE-T3-5-Cityzenscience-edu-PoliTO/myComfort/blob/main/pictures/notification.jpg" width="200"> | <img src="https://github.com/PRELUDE-T3-5-Cityzenscience-edu-PoliTO/myComfort/blob/main/pictures/dashboard.jpg" width="200"> 
 
 
 ## Features
