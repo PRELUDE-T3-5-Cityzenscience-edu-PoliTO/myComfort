@@ -3,7 +3,7 @@
 This is the source code for the Android application developed as user interface for the project presented in:
 > https://github.com/PRELUDE-T3-5-Cityzenscience-edu-PoliTO/PMV-Monitoring-Platform
 
-and described in the paper: ...
+**Description and extra-contents are available at: ...PAPER link...**
 
 Homepage                   |  Overview                 | Sensor Network        | Notification        | Dashboard           |
 :-------------------------:|:-------------------------:|:---------------------:|:-------------------:|:-------------------:|
