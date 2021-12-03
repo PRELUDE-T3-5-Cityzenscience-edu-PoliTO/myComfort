@@ -1,7 +1,9 @@
 # +comfort App
 
 This is the source code for the Android application developed as user interface for the project presented in:
-> https://github.com/AndreaAvignone/PMV-Monitoring-Platform
+> https://github.com/PRELUDE-T3-5-Cityzenscience-edu-PoliTO/PMV-Monitoring-Platform
+
+and described in the paper: ...
 
 Homepage                   |  Overview                 | Sensor Network        | Notification        | Dashboard           |
 :-------------------------:|:-------------------------:|:---------------------:|:-------------------:|:-------------------:|
@@ -18,10 +20,10 @@ Homepage                   |  Overview                 | Sensor Network        |
 
 ## Links
 Main repository:
-> https://github.com/AndreaAvignone/PMV-Monitoring-Platform
+> https://github.com/PRELUDE-T3-5-Cityzenscience-edu-PoliTO/PMV-Monitoring-Platform
 
 Platform installation:
->https://github.com/AndreaAvignone/Monitoring-Platform-kit
+>https://github.com/PRELUDE-T3-5-Cityzenscience-edu-PoliTO/Monitoring-Platform-kit
 
 ## License
-[GPL-3.0](./LICENSE)
+[GPL-3.0](./LICENSE) for any usages, quote the mentioned publication and this repository.
